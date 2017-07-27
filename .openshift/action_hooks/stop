@@ -1,0 +1,17 @@
+#!/bin/bash
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+# The logic to stop your application should be put in this script.
+if [ -z "$(ps -ef | grep gunicorn | grep -v grep)" ]
+then
+    client_result "Gunicorn is already stopped"
+else
+    kill `ps -ef | grep gunicorn | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
+fi
+
+if [ -z "$(ps -ef | grep 'python3.5' | grep -v grep)" ]
+then
+    client_result "Python is already stopped"
+else
+    kill `ps -ef | grep 'python3.5' | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
+fi
