@@ -4,6 +4,7 @@ import gevent
 from classes import *
 
 app = Flask(__name__)
+app.debug = True
 sockets = Sockets(app)
 
 svr = Server()
@@ -16,6 +17,3 @@ def connect(ws):
         message = ws.receive()
         if message:
             gevent.Greenlet.spawn(svr.update, ws, message)
-
-if __name__ == "__main__":
-    app.run(port=8000, debug=True)
