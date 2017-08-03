@@ -15,6 +15,7 @@ class Server:
 		unid = "c" + str(self._curid)
 		client = Client(self, ws, unid)
 		self.clients[unid] = client
+		print("Client created with a unid of", client.unid)
 		return client
 
 	def process(self, payload):
