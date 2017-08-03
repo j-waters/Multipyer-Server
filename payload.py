@@ -2,6 +2,7 @@ from json import dumps, loads
 
 class Payload:
 	def __init__(self, decode=None, **kwargs):
+		self.action = None
 		if type(decode) == dict:
 			self.__dict__.update(decode)
 		if type(decode) == str:
