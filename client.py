@@ -30,16 +30,16 @@ class Client:
 
 	def _receive(self):
 		try:
-			recv = self.socket.receive()
-			recv = Payload(recv)
-			self.server.inQueue.append(recv)
+			data = self.socket.receive()
+			data = Payload(data)
+			self.server.inQueue.append(data)
 		except WebSocketError:
 			print("Socket already closed")
 
 	def _queue(self):
 		while True:
 			if len(self.outQueue) > 0:
-				self.send(self.outQueue[0])
+				self._send(self.outQueue[0])
 			gevent.sleep(0)
 
 	def _poll(self):
