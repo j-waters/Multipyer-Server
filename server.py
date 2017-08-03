@@ -10,8 +10,9 @@ class Server:
 		self.inQueue = []
 		gevent.spawn(self.update)
 
+
 	def connect(self, ws):
-		self._curid += 1,
+		self._curid += 1
 		unid = "c" + str(self._curid)
 		client = Client(self, ws, unid)
 		self.clients[unid] = client
@@ -19,9 +20,7 @@ class Server:
 		return client
 
 	def process(self, payload):
-		if payload.action == locals.HANDSHAKE:
-			if self.clients[payload.origin].unid == payload.unid:
-				self.clients[payload.origin].connected = True
+		pass
 
 
 	def update(self):
@@ -30,4 +29,4 @@ class Server:
 				payload = self.inQueue.pop(0) # type: Payload
 				if payload.target == "s":
 					self.process(payload)
-		gevent.sleep(0)
+			gevent.sleep(0)

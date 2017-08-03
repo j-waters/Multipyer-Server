@@ -13,5 +13,5 @@ class Payload:
 		if not hasattr(self, 'origin'):
 			self.origin = "s"
 
-	def __str__(self):
+	def encode(self):
 		return dumps(self.__dict__)

@@ -8,7 +8,6 @@ class Client:
 		self.server = server
 		self.socket = socket  # type: WebSocket
 		self.unid = unid
-		self.connected = False
 		self.outQueue = []
 		self.handshake()
 
@@ -20,7 +19,7 @@ class Client:
 
 	def _send(self, payload):
 		try:
-			self.socket.send(payload)
+			self.socket.send(payload.encode())
 			self.outQueue.remove(payload)
 		except WebSocketError:
 			print("Socket is dead")
@@ -31,18 +30,20 @@ class Client:
 	def _receive(self):
 		try:
 			data = self.socket.receive()
+			if data is None:
+				raise WebSocketError
 			data = Payload(data)
 			self.server.inQueue.append(data)
 		except WebSocketError:
-			print("Socket already closed")
+			pass
 
 	def _queue(self):
-		while True:
+		while not self.socket.closed:
 			if len(self.outQueue) > 0:
 				self._send(self.outQueue[0])
 			gevent.sleep(0)
 
 	def _poll(self):
-		while True:
+		while not self.socket.closed:
 			self._receive()
-		gevent.sleep(0)
+			gevent.sleep(0)
