@@ -26,5 +26,4 @@ def connect(ws):
 
 @app.route('/')
 def test():
-	print(app.config['SQLALCHEMY_DATABASE_URI'])
-	return "All is well"
+	return "Database:" + str(app.config['SQLALCHEMY_DATABASE_URI'])
