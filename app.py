@@ -10,12 +10,14 @@ sockets = Sockets(app)
 
 svr = Server()
 
+
 @sockets.route('/connect')
 def connect(ws):
 	svr.connect(ws)
 	while True:
 		gevent.sleep(0)
 
-@app.route('/test')
+
+@app.route('/')
 def test():
-	return "It Works!"
+	return "All is well"
