@@ -3,14 +3,14 @@ from flask_sockets import Sockets
 import gevent
 import time
 from server import Server
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
 app.debug = True
 sockets = Sockets(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL', '127.11.222.130:5432')
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL', '127.11.222.130:5432')
 #db = SQLAlchemy(app)
 #db.create_all()
 
@@ -26,5 +26,5 @@ def connect(ws):
 
 @app.route('/')
 def test():
-	print(app.config['SQLALCHEMY_DATABASE_URI'])
+	#print(app.config['SQLALCHEMY_DATABASE_URI'])
 	return "All is well"
