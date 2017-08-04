@@ -2,5 +2,5 @@ Flask
 gevent
 gunicorn
 flask_sockets
-SQLAlchemy
-Flask-SQLAlchemy
+flask_sqlalchemy
+psycopg2
