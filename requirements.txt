@@ -2,4 +2,5 @@ Flask
 gevent
 gunicorn
 flask_sockets
-flask_sqlalchemy
+SQLAlchemy
+Flask-SQLAlchemy
