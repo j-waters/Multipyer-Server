@@ -1,0 +1,5 @@
+#!/bin/bash
+nohup $HOME/python/usr/bin/pip3 install -r $OPENSHIFT_REPO_DIR/requirements.txt
+cd $OPENSHIFT_REPO_DIR
+#nohup $HOME/python/usr/bin/gunicorn app:app --bind=$OPENSHIFT_DIY_IP:8080 |& /usr/bin/logshifter -tag diy &
+nohup $HOME/python/usr/bin/python3.5 wsgi.py |& /usr/bin/logshifter -tag diy &
