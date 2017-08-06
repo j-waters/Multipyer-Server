@@ -38,8 +38,8 @@ class User(db.Model):
 class GameServer(db.Model):
 	__tablename__ = 'servers'
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(40), unique=True)
-	secret = name = db.Column(db.String(40))
+	name = db.Column(db.String(40))
+	secret = db.Column(db.String(40))
 	min_clients = db.Column(db.Integer)
 	max_clients = db.Column(db.Integer)
 	created = db.Column(db.DateTime)
@@ -50,7 +50,7 @@ class GameServer(db.Model):
 
 	def __init__(self, user, name, secret, min_clients, max_clients, hard_min, persistent):
 		self.name = name
-		self.secret
+		self.secret = secret
 		self.min_clients = min_clients
 		self.max_clients = max_clients
 		self.hard_min = hard_min
