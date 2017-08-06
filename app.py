@@ -1,11 +1,15 @@
 import flask
 from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = flask.Flask(__name__)
 sockets = Sockets(app)
 
-app.config.from_pyfile('config.cfg')
+try:
+	app.config.from_pyfile('config.cfg')
+except FileNotFoundError:
+	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL')
 
 db = SQLAlchemy(app)
 
@@ -13,7 +17,6 @@ import gevent
 import time
 from manager import Manager
 manager = Manager()
-import os
 from json import dumps
 
 
