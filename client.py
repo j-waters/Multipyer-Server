@@ -47,3 +47,5 @@ class Client:
 		while not self.socket.closed:
 			self._receive()
 			gevent.sleep(0)
+		#self.close()
+

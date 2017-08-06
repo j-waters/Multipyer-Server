@@ -10,10 +10,7 @@ from gevent import monkey
 monkey.patch_all()
 
 def run_server():
-	if app.debug:
-		application = DebuggedApplication(app)
-	else:
-		application = app
+	application = DebuggedApplication(app)
 
 	server = pywsgi.WSGIServer(('127.0.0.1', 8000), application,
 							   handler_class=WebSocketHandler)

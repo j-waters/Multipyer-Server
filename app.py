@@ -1,29 +1,48 @@
-from flask import Flask
+import flask
 from flask_sockets import Sockets
-import gevent
-import time
-from server import Server
 from flask_sqlalchemy import SQLAlchemy
-import os
 
-app = Flask(__name__)
-app.debug = True
+app = flask.Flask(__name__)
 sockets = Sockets(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL', '127.11.222.130:5432')
+app.config.from_pyfile('config.cfg')
+
 db = SQLAlchemy(app)
-db.create_all()
 
-svr = Server()
+import gevent
+import time
+from manager import Manager
+manager = Manager()
+import os
+from json import dumps
 
 
-@sockets.route('/connect')
-def connect(ws):
-	svr.connect(ws)
-	while True:
+
+import models
+
+
+@sockets.route('/server/<id>/<instance>')
+def websocket(ws, id, instance):
+	client = manager.add_client(ws)
+	if instance:  # id is that of an instance
+		pass
+	else:  # id is that of a blank server
+		manager.add_to_queue(id, client)
+
+	while not client.socket.closed:
 		gevent.sleep(0)
 
 
 @app.route('/')
-def test():
-	return "Database:" + str(app.config['SQLALCHEMY_DATABASE_URI'])
+def home():
+	return "Home page coming soon"
+
+@app.route('/connect', methods=['GET', 'POST'])
+def connect():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('home'), code=307)
+	if flask.request.method == 'POST':
+		data = flask.request.form
+		gs = models.GameServer.query.filter_by(id=data['gsid']).first()
+
+	return ""

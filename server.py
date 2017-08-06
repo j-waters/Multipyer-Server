@@ -1,23 +1,21 @@
 import gevent
 from client import Client
 from payload import Payload
+import models
 import locals
 
 class Server:
-	def __init__(self):
+	def __init__(self, gs):
+		self.options = {"max_clients":gs.max_clients,
+						"min_clients":gs.min_clients,
+						"persistent":gs.persistent,
+						"hard_min":gs.hard_min}
 		self.clients = {}
 		self._curid = 0
 		self.inQueue = []
+		self.instance = models.Instance(gs)
 		gevent.spawn(self.update)
 
-
-	def connect(self, ws):
-		self._curid += 1
-		unid = "c" + str(self._curid)
-		client = Client(self, ws, unid)
-		self.clients[unid] = client
-		print("Client created with a unid of", client.unid)
-		return client
 
 	def process(self, payload):
 		pass
