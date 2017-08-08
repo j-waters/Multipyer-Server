@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all()
 from app import app
 
 from gevent import pywsgi
@@ -6,8 +8,6 @@ from geventwebsocket.handler import WebSocketHandler
 from werkzeug.serving import run_with_reloader
 from werkzeug.debug import DebuggedApplication
 
-from gevent import monkey
-monkey.patch_all()
 
 def run_server():
 	application = DebuggedApplication(app)
@@ -17,4 +17,5 @@ def run_server():
 	server.serve_forever()
 
 if __name__ == "__main__":
-	run_with_reloader(run_server)
+	#run_with_reloader(run_server)
+	run_server()
