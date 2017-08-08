@@ -21,8 +21,11 @@ import time
 from manager import Manager
 manager = Manager()
 from json import dumps
+from psutil import Process
 
 import models
+
+app.process = Process(os.getpid())
 
 
 @sockets.route('/server/<id>/<instance>')

@@ -2,6 +2,7 @@ import gevent
 from client import Client
 from server import Server
 import models
+from app import app
 
 
 class Manager:
@@ -47,5 +48,6 @@ class Manager:
 						server.add_client(c)
 
 					server.start()
+			#print(app.process.memory_percent(), app.process.cpu_percent())
 
 			gevent.sleep(1)
