@@ -27,7 +27,8 @@ class Client:
 
 	def send(self, payload):
 		self.outQueue.append(payload)
-		gevent.spawn(self._send, payload)
+		while len(self.outQueue) > 0:
+			gevent.spawn(self._send, self.outQueue[0])
 
 	def _receive(self):
 		try:
