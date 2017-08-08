@@ -24,16 +24,28 @@ class Manager:
 				return c
 
 	def add_to_queue(self, gsid, client):
+		if not str(gsid) in self.queue.keys():
+			self.queue[str(gsid)] = []
 		self.queue[str(gsid)].append(client)
+		print("Queue:", self.queue)
 
 	def create_server(self, gsid):
-		gs = models.GameServer.query.filter_by(id=gsid).first()  # type: models.GameServer
+		print("Create Server")
+		gs = models.GameServer.query.filter_by(id=int(gsid)).first()  # type: models.GameServer
 		server = Server(gs)
+		return server
 
 
 	def update(self):
 		while True:
-			for gs in self.queue.keys():
-				if len(self.queue[str(gs.id)]) >= gs.min_clients:
-					self.create_server(gs.id)
-			gevent.sleep(0)
+			for gsid in self.queue.keys():
+				gs = models.GameServer.query.filter_by(id=int(gsid)).first()
+				if len(self.queue[gsid]) >= gs.min_clients:
+					server = self.create_server(gsid)
+					for i in range(gs.min_clients):
+						c = self.queue[gsid].pop(0)
+						server.add_client(c)
+
+					server.start()
+
+			gevent.sleep(1)

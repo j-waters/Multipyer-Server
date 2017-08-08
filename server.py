@@ -15,6 +15,10 @@ class Server:
 		self.inQueue = []
 		self.instance = models.Instance(gs)
 		gevent.spawn(self.update)
+	
+	def add_client(self, client):
+		client.server = self
+		self.clients[client.unid] = client
 
 
 	def process(self, payload):
@@ -27,4 +31,9 @@ class Server:
 				payload = self.inQueue.pop(0) # type: Payload
 				if payload.target == "s":
 					self.process(payload)
-			gevent.sleep(0)
+			gevent.sleep(0.1)
+
+	def start(self):
+		for client in self.clients.values():
+			p = Payload(action=locals.START, clients=[c.unid for c in self.clients.values() if c != client], origin="s")
+			client.send(p)

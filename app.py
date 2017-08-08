@@ -1,3 +1,6 @@
+from gevent import monkey
+monkey.patch_all()
+
 import flask
 from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
@@ -19,26 +22,26 @@ from manager import Manager
 manager = Manager()
 from json import dumps
 
-
-
 import models
 
 
 @sockets.route('/server/<id>/<instance>')
 def websocket(ws, id, instance):
 	client = manager.add_client(ws)
-	if instance:  # id is that of an instance
+	print("Connection from", client.unid)
+	if instance == "True":  # id is that of an instance
 		pass
 	else:  # id is that of a blank server
 		manager.add_to_queue(id, client)
 
 	while not client.socket.closed:
-		gevent.sleep(0)
+		gevent.sleep(10)
 
 
 @app.route('/')
 def home():
 	return "Home page coming soon"
+
 
 @app.route('/connect', methods=['GET', 'POST'])
 def connect():

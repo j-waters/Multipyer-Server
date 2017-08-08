@@ -22,7 +22,6 @@ class User(db.Model):
 		self.level = level
 		self.confirmed = False
 		self.password = generate_password_hash(password)
-		print(self.password, len(self.password))
 		self.created = datetime.utcnow()
 
 	def __repr__(self):
@@ -80,3 +79,12 @@ def init_db():
 	db.reflect()
 	db.drop_all()
 	db.create_all()
+
+def test():
+	u = User("uname", "mail", "pword")
+	db.session.add(u)
+
+	g = GameServer(u, "gname", "scrt", 2, 3, True, False)
+	db.session.add(g)
+
+	db.session.commit()

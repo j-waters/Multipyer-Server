@@ -14,11 +14,12 @@ class Client:
 	def handshake(self):
 		p = Payload(action=locals.HANDSHAKE, unid=self.unid)
 		self.send(p)
-		gevent.spawn(self._queue)
+		#gevent.spawn(self._queue)
 		gevent.spawn(self._poll)
 
 	def _send(self, payload):
 		try:
+			#print("Send:", payload.encode())
 			self.socket.send(payload.encode())
 			self.outQueue.remove(payload)
 		except WebSocketError:
@@ -26,6 +27,7 @@ class Client:
 
 	def send(self, payload):
 		self.outQueue.append(payload)
+		gevent.spawn(self._send, payload)
 
 	def _receive(self):
 		try:
