@@ -52,6 +52,9 @@ def acc_register():
 		return flask.redirect(flask.url_for('home'), code=307)
 	data = json.loads(flask.request.json)
 	user = models.User.query.filter_by(secret=data['secret']).first()
+	del data['secret']
+	if user is None:
+		return str(locals.INVALID_SECRET)
 	if data["email"] != "":
 		m = models.Account.query.filter_by(user=user, email=data["email"]).all()
 		if len(m) > 0:
@@ -65,7 +68,8 @@ def acc_register():
 	except SQLException.IntegrityError as e:
 		print(e)
 		return str(locals.REG_TAKEN)
-	return locals.FAILURE
+	return str(locals.FAILURE)
+
 
 @app.route('/acc_login', methods=['GET', 'POST'])
 def check_auth():
@@ -79,6 +83,40 @@ def check_auth():
 		return str(locals.SUCCESS)
 	else:
 		return str(locals.FAILURE)
+
+@app.route('/acc_data_get', methods=['GET', 'POST'])
+def acc_data_get():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('home'), code=307)
+
+	data = json.loads(flask.request.json)
+	account = models.Account.query.filter_by(username=data['username']).first()
+
+	if account is None or not account.check_password(data['password']):
+		return str(locals.FAILURE)
+	else:
+		return account.data
+
+@app.route('/acc_data_set', methods=['GET', 'POST'])
+def acc_data_set():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('home'), code=307)
+
+	data = json.loads(flask.request.json)
+	account = models.Account.query.filter_by(username=data['username']).first()
+
+	if account is None or not account.check_password(data['password']):
+		return str(locals.FAILURE)
+	else:
+		if data['overwrite']:
+			account.data = json.dumps(data['data'])
+		else:
+			dic = json.loads(account.data)
+			dic.update(data['data'])
+			account.data = json.dumps(dic)
+		db.session.commit()
+		return str(locals.SUCCESS)
+
 
 
 def init():
