@@ -1,3 +1,5 @@
+import json
+
 from gevent import monkey
 monkey.patch_all()
 
@@ -5,6 +7,7 @@ import flask
 from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
 import os
+from sqlalchemy import exc as SQLException
 
 app = flask.Flask(__name__)
 sockets = Sockets(app)
@@ -14,14 +17,15 @@ try:
 except FileNotFoundError:
 	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL')
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 import gevent
-import time
 from manager import Manager
 manager = Manager()
-from json import dumps
 from psutil import Process
+import locals
 
 import models
 
@@ -46,6 +50,27 @@ def home():
 	return "Home page coming soon"
 
 
+@app.route('/acc_register', methods=['POST'])
+def acc_register():
+	data = json.loads(flask.request.json)
+	user = models.User.query.filter_by(secret=data['secret']).first()
+	if data["email"] != "":
+		m = models.Account.query.filter_by(user=user, email=data["email"]).all()
+		if len(m) > 0:
+			return str(locals.REG_ETAKEN)
+	try:
+		a = models.Account(user, **data)
+		db.session.add(a)
+		db.session.commit()
+		print("Registered new user")
+		return str(locals.SUCCESS)
+	except SQLException.IntegrityError as e:
+		print(e)
+		return str(locals.REG_TAKEN)
+	return locals.FAILURE
+
+
+
 @app.route('/connect', methods=['GET', 'POST'])
 def connect():
 	if flask.request.method == 'GET':
@@ -55,3 +80,20 @@ def connect():
 		gs = models.GameServer.query.filter_by(id=data['gsid']).first()
 
 	return ""
+
+
+def init():
+	db.reflect()
+	db.drop_all()
+	db.create_all()
+
+	u = models.User("bob", "mail", "123")
+	db.session.add(u)
+
+	g = models.GameServer(u, "fun", 2, 2, True, False)
+	db.session.add(g)
+
+	db.session.commit()
+	print("Database Setup Complete")
+
+#init()
