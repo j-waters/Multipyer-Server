@@ -32,14 +32,10 @@ import models
 app.process = Process(os.getpid())
 
 
-@sockets.route('/server/<id>/<instance>')
-def websocket(ws, id, instance):
+@sockets.route('/server/')
+def websocket(ws):
 	client = manager.add_client(ws)
 	print("Connection from", client.unid)
-	if instance == "True":  # id is that of an instance
-		pass
-	else:  # id is that of a blank server
-		manager.add_to_queue(id, client)
 
 	while not client.socket.closed:
 		gevent.sleep(10)
@@ -52,6 +48,8 @@ def home():
 
 @app.route('/acc_register', methods=['POST'])
 def acc_register():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('home'), code=307)
 	data = json.loads(flask.request.json)
 	user = models.User.query.filter_by(secret=data['secret']).first()
 	if data["email"] != "":
@@ -69,17 +67,18 @@ def acc_register():
 		return str(locals.REG_TAKEN)
 	return locals.FAILURE
 
-
-
-@app.route('/connect', methods=['GET', 'POST'])
-def connect():
+@app.route('/acc_login', methods=['GET', 'POST'])
+def check_auth():
 	if flask.request.method == 'GET':
 		return flask.redirect(flask.url_for('home'), code=307)
-	if flask.request.method == 'POST':
-		data = flask.request.form
-		gs = models.GameServer.query.filter_by(id=data['gsid']).first()
 
-	return ""
+	data = json.loads(flask.request.json)
+	account = models.Account.query.filter_by(username=data['username']).first()
+
+	if account is not None and account.check_password(data['password']):
+		return str(locals.SUCCESS)
+	else:
+		return str(locals.FAILURE)
 
 
 def init():

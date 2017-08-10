@@ -32,6 +32,9 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
 
+	def check_password(self, password):
+		return check_password_hash(self.password, password)
+
 """def set_password(self, password):
 		self.pw_hash = generate_password_hash(password)
 
@@ -83,6 +86,9 @@ class Account(db.Model):
 
 	def __repr__(self):
 		return '<Account {} of user {}>'.format(self.username, self.user.username)
+
+	def check_password(self, password):
+		return check_password_hash(self.password, password)
 
 class Instance(db.Model):
 	__tablename__ = 'instances'

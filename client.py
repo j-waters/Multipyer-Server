@@ -3,9 +3,10 @@ from geventwebsocket.websocket import WebSocket, WebSocketError
 import locals
 from payload import Payload
 
+
 class Client:
-	def __init__(self, server, socket, unid):
-		self.server = server
+	def __init__(self, master, socket, unid):
+		self.master = master
 		self.socket = socket  # type: WebSocket
 		self.unid = unid
 		self.outQueue = []
@@ -14,12 +15,12 @@ class Client:
 	def handshake(self):
 		p = Payload(action=locals.HANDSHAKE, unid=self.unid)
 		self.send(p)
-		#gevent.spawn(self._queue)
+		# gevent.spawn(self._queue)
 		gevent.spawn(self._poll)
 
 	def _send(self, payload):
 		try:
-			#print("Send:", payload.encode())
+			# print("Send:", payload.encode())
 			self.socket.send(payload.encode())
 			self.outQueue.remove(payload)
 		except WebSocketError:
@@ -36,7 +37,7 @@ class Client:
 			if data is None:
 				raise WebSocketError
 			data = Payload(data)
-			self.server.inQueue.append(data)
+			self.master.inQueue.append(data)
 		except WebSocketError:
 			pass
 
@@ -50,5 +51,4 @@ class Client:
 		while not self.socket.closed:
 			self._receive()
 			gevent.sleep(0)
-		#self.close()
-
+		# self.close()
