@@ -99,6 +99,7 @@ def register():
 			                level=1)
 			db.session.add(u)
 			db.session.commit()
+			flask_login.login_user(u)
 			return flask.redirect(flask.url_for('registered'))
 		except SQLException.IntegrityError as e:
 			return message(message="<p>Username or email already exists</p>", url=flask.url_for('register'))
