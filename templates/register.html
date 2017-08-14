@@ -254,7 +254,10 @@ function checkComplete(){
 		var email = $(this);
 		var atpos = email.val().indexOf("@");
 		var dotpos = email.val().lastIndexOf(".");
-		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.val().length) {
+		if ($(this).val() == ""){
+			setTextInputNothing($(this))
+			}
+		else if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.val().length) {
 			setTextInputWrong($(this), "")
 		}
 		else {
@@ -283,6 +286,10 @@ function checkComplete(){
 
 	$( "#username" ).trigger( "input" );
 	$( "#email" ).trigger( "input" );
+
+	$('#password-again').on('focus', function() {
+		document.body.scrollTop = $(this).offset().top;
+	});
 
 
 </script>
