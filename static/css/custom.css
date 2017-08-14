@@ -1,0 +1,77 @@
+:root {
+  --main-color: #29b6f6;
+}
+
+.collection .collection-item p {
+  color: rgba(0,0,0,0.71);
+  font-size: 14.5px;
+  margin: 0
+}
+
+.collection .collection-item.avatar .title {
+  color: rgba(0,0,0,0.87);
+  font-size: 18px
+}
+
+.collection .collection-item.avatar:not(.circle-clipper) > .circle, .collection .collection-item.avatar :not(.circle-clipper) > .circle {
+    height: 60px;
+    width: 60px;
+    left: 5px;
+}
+
+.collection .collection-item:last-child {
+    border-bottom: 1px solid #e0e0e0
+}
+
+.collection .collection-item.active {
+    background-color: #e3f2fd;
+    color: #eafaf9;
+}
+
+.tabs .tab a.active {
+  color:var(--main-color);
+}
+
+.tabs .tab a:hover {
+  color:var(--main-color);
+}
+
+.tabs .tab a {
+  color:var(--main-color);
+}
+
+.tabs .indicator {
+background-color:var(--main-color);
+}
+
+.page-footer {
+position:fixed;
+display: flex;
+height: 70px;
+width:inherit;
+background-color:rgba(0, 0, 0, 0);
+color:rgba(0,0,0,0.71);
+bottom:0;
+flex-direction: column
+}
+
+.page-footer p {
+    margin-top: 0px;
+        margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    }
+
+.divider {
+height: 1px;
+padding-top: 1px;
+
+background-color: #b1adad;
+}
+
+@font-face {
+    font-family: "Material-Design-Icons";
+    src: url("fonts/material-design-icons.ttf") format("truetype")
+    font-weight: normal;
+    font-style: normal
+}

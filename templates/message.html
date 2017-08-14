@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--================================================================================
+	Item Name: Materialize - Material Design Admin Template
+	Version: 3.1
+	Author: GeeksLabs
+	Author URL: http://www.themeforest.net/user/geekslabs
+================================================================================ -->
+
+<!-- Mirrored from demo.geekslabs.com/materialize/v3.1/user-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Aug 2017 19:31:40 GMT -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Error | Multipyer</title>
+
+    <!-- Favicons-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/favicons/manifest.json">
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/favicons/favicon.ico">
+    <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- For Windows Phone -->
+
+    <!-- CORE CSS-->
+
+    <link href="{{ url_for('static',filename='css/material-icons.css') }}" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/materialize.css') }}" media="screen,projection" />
+
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/custom.css') }}" media="screen,projection" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .row .margin {
+            margin: 0 !important;
+        }
+
+        .login-form-text {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+        }
+
+        .medium-small {
+            font-size: 0.9rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .z-depth-4,
+        .modal {
+            box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21);
+        }
+
+        .material-icons {
+            line-height: inherit;
+        }
+    </style>
+
+    <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+
+</head>
+
+<body class="light-blue lighten-1">
+    <!-- Start Page Loading -->
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <!-- End Page Loading -->
+
+    <div id="login-page" class="row">
+        <div class="col s12 z-depth-4 card-panel" style="text-align: center;">
+            {{ message|safe }}
+            <a href="{{ url }}" class="btn waves-effect waves-light col s12" style="background-color:#ff5a92; margin-bottom: 1em;">{{ button }}</a>
+        </div>
+    </div>
+
+    <!-- ================================================
+  Scripts
+  ================================================ -->
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+</body>
+
+<!-- Mirrored from demo.geekslabs.com/materialize/v3.1/user-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Aug 2017 19:31:40 GMT -->
+
+</html>

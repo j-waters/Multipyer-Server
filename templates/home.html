@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+	<title>Starter Template - Materialize</title>
+
+	<!-- CSS  -->
+	<link href="{{ url_for('static',filename='css/material-icons.css') }}" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/materialize.css') }}"
+		  media="screen,projection"/>
+
+	<style>
+
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+
+	</style>
+
+</head>
+<body>
+<nav class="light-blue lighten-1" role="navigation">
+	<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+		<ul class="right hide-on-med-and-down">
+			<li><a href="{{ url_for('console') }}">Console</a></li>
+			<li><a href="{{ url_for('login') }}">Login</a></li>
+		</ul>
+
+		<ul id="nav-mobile" class="side-nav">
+			<li><a href="#">Navbar Link</a></li>
+		</ul>
+		<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+	</div>
+</nav>
+<div class="section no-pad-bot" id="index-banner">
+	<div class="container">
+		<br><br>
+		<h1 class="header center orange-text">Multipyer</h1>
+		<div class="row center">
+			<h5 class="header col s12 light">An online networking solution for Python beginners</h5>
+		</div>
+		<div class="row center">
+			<a href="{{ url_for('register') }}" id="register-button"
+			   class="btn-large waves-effect waves-light orange">Begin</a>
+		</div>
+		<br><br>
+
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="section">
+
+		<!--   Icon Section   -->
+		<div class="row">
+			<div class="col s12 m4">
+				<div class="icon-block">
+					<h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
+					<h5 class="center">Speeds up development</h5>
+
+					<p class="light">The complex, time-consuming process of setting up a server is all done for you.
+					</p>
+				</div>
+			</div>
+
+			<div class="col s12 m4">
+				<div class="icon-block">
+					<h2 class="center light-blue-text"><i class="material-icons">money_off</i></h2>
+					<h5 class="center">Free</h5>
+
+					<p class="light">Support up to 20 players across multiple instances, all for free</p>
+				</div>
+			</div>
+
+			<div class="col s12 m4">
+				<div class="icon-block">
+					<h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
+					<h5 class="center">For beginners and pros</h5>
+
+					<p class="light">With a simple, well documented syntax, creating a client using our Python module is super simple.
+					Plus, it's totally open source.</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<br><br>
+</div>
+
+<footer class="page-footer orange">
+	<div class="container">
+		<div class="row">
+			<div class="col l6 s12">
+				<h5 class="white-text">Company Bio</h5>
+				<p class="grey-text text-lighten-4">We are a team of college students working on this project like it's
+					our full time job. Any amount would help support and continue development on this project and is
+					greatly appreciated.</p>
+
+
+			</div>
+			<div class="col l3 s12">
+				<h5 class="white-text">Settings</h5>
+				<ul>
+					<li><a class="white-text" href="#!">Link 1</a></li>
+					<li><a class="white-text" href="#!">Link 2</a></li>
+					<li><a class="white-text" href="#!">Link 3</a></li>
+					<li><a class="white-text" href="#!">Link 4</a></li>
+				</ul>
+			</div>
+			<div class="col l3 s12">
+				<h5 class="white-text">Connect</h5>
+				<ul>
+					<li><a class="white-text" href="#!">Link 1</a></li>
+					<li><a class="white-text" href="#!">Link 2</a></li>
+					<li><a class="white-text" href="#!">Link 3</a></li>
+					<li><a class="white-text" href="#!">Link 4</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="footer-copyright">
+		<div class="container">
+			Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+		</div>
+	</div>
+</footer>
+
+
+<!--  Scripts-->
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+<script type="text/javascript">
+(function($){
+  $(function(){
+
+    $('.button-collapse').sideNav();
+
+  }); // end of document ready
+})(jQuery); // end of jQuery name space
+
+
+</script>
+
+</body>
+</html>
