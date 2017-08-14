@@ -191,7 +191,7 @@ function checkComplete(){
 		$("#reg").attr("disabled", "disabled");
 	}
 }
-	$('#username').bind('input propertychange', function() {
+	$('#username').on('input propertychange', function() {
 		uname = $(this);
 		setTextInputNothing(uname)
 		if (uname.val() == ""){
@@ -206,7 +206,6 @@ function checkComplete(){
 				dataType: 'json',
 				unameval: uname.val(),
 				success: function(data){
-					console.log(this.unameval, uname.val(), uname.val() == this.unameval)
 					if (uname.val() == this.unameval){
 						if (data == false) {
 							setTextInputWrong(uname, "Username in use")
@@ -221,7 +220,7 @@ function checkComplete(){
 		checkComplete()
 	});
 
-	$('#password-again').bind('input propertychange', function() {
+	$('#password-again').on('input propertychange', function() {
 		if ($(this).val() == ""){
 			setTextInputNothing($(this))
 			}
@@ -236,7 +235,7 @@ function checkComplete(){
 		checkComplete()
 	});
 
-	$('#password').bind('input propertychange', function() {
+	$('#password').on('input propertychange', function() {
 		if ($(this).val() == ""){
 			setTextInputNothing($(this))
 			}
@@ -251,7 +250,7 @@ function checkComplete(){
 		checkComplete()
 	});
 
-	$('#email').bind('input propertychange', function() {
+	$('#email').on('input propertychange', function() {
 		var email = $(this);
 		var atpos = email.val().indexOf("@");
 		var dotpos = email.val().lastIndexOf(".");
@@ -268,7 +267,6 @@ function checkComplete(){
 				dataType: 'json',
 				emailval: email.val(),
 				success: function(data){
-					console.log(this.unameval, uname.val(), uname.val() == this.unameval)
 					if (email.val() == this.emailval){
 						if (data == false) {
 							setTextInputWrong(email, "Email in use")
@@ -282,6 +280,10 @@ function checkComplete(){
 		}
 		checkComplete()
 	});
+
+	$( "#username" ).trigger( "input" );
+	$( "#email" ).trigger( "input" );
+
 
 </script>
 
