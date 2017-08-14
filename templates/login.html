@@ -94,38 +94,39 @@ line-height: inherit;
 
 <div id="login-page" class="row">
 	<div class="col s12 z-depth-4 card-panel">
-		<form class="login-form">
+		<form class="login-form" method="post">
 			<div class="row">
 				<div class="input-field col s12 center">
 					<img src="favicons/favicon.png" style="width:100px; height:100px;margin-top: 1rem;" alt=""
 						 class="circle responsive-img valign profile-image-login">
 					<p class="center login-form-text" style="padding-left: 100px;padding-right: 100px;">Multipyer</p>
+					<p id="invalid" class="center login-form-text" style="color: #ff0000; display: none;">Incorrect username or password</p>
 				</div>
 			</div>
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="material-icons prefix">person_outline</i>
-					<input id="username" type="text">
+					<input name="username" id="username" type="text">
 					<label for="username" class="center-align">Username</label>
 				</div>
 			</div>
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="material-icons prefix">lock_outline</i>
-					<input id="password" type="password">
+					<input name="password" id="password" type="password">
 					<label for="password">Password</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12 m12 l12  login-text" style="margin-left: -6px;margin-top:0px">
-					<input type="checkbox" class="filled-in" id="remember-me"
+					<input name="remember-me" type="checkbox" class="filled-in" id="remember-me"
 						   style="margin-left: 10px;margin-top: 12px;width: 20px;height: 20px;pointer-events: all;"/>
 					<label for="remember-me">Remember me</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<a href="index.html" class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Login</a>
+					<button type="submit" class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Login</button>
 				</div>
 			</div>
 			<div class="row">
@@ -150,6 +151,14 @@ line-height: inherit;
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		if ("{{failed}}" == 'True') {
+			$('#invalid')[0].style.display = 'block'
+		}
+	})
+</script>
 
 </body>
 

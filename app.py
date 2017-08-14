@@ -7,11 +7,16 @@ monkey.patch_all()
 import flask
 from flask_sockets import Sockets
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+import flask_login
 import os
 from sqlalchemy import exc as SQLException
 
 app = flask.Flask(__name__)
 sockets = Sockets(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 try:
 	app.config.from_pyfile('config.cfg')
@@ -19,6 +24,7 @@ except FileNotFoundError:
 	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'secret key'
 
 db = SQLAlchemy(app)
 
@@ -44,6 +50,7 @@ def websocket(ws):
 
 
 @app.route('/console')
+@flask_login.login_required
 def console():
 	return flask.render_template('console.html')
 
@@ -53,9 +60,27 @@ def home():
 	return flask.render_template('home.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-	return flask.render_template('login.html')
+	if flask.request.method == 'GET':
+		return flask.render_template('login.html', failed='False')
+	username = flask.request.form['username']
+	password = flask.request.form['password']
+
+	user = models.User.query.filter_by(username=username).first()
+	if user is None or user.check_password(password) == False:
+		return flask.render_template('login.html', failed='True')
+	flask_login.login_user(user, remember='remember_me' in flask.request.form)
+	return flask.redirect(flask.request.args.get('next') or flask.url_for('console'))
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return flask.redirect(flask.url_for('home'))
+
+@login_manager.user_loader
+def load_user(id):
+    return models.User.query.get(int(id))
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -203,13 +228,13 @@ def init():
 	db.drop_all()
 	db.create_all()
 
-	u = models.User("bob", "mail", "123")
+	"""u = models.User("bob", "mail", "123")
 	db.session.add(u)
 
 	g = models.GameServer(u, "fun", 2, 2, True, False)
 	db.session.add(g)
 
-	db.session.commit()
+	db.session.commit()"""
 	print("Database Setup Complete")
 
-	# init()
+#init()
