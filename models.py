@@ -16,7 +16,7 @@ class User(db.Model):
 	secret = db.Column(db.String(52))
 	created = db.Column(db.DateTime)
 	level = db.Column(db.Integer)
-	password = db.Column(db.String(66))
+	password = db.Column(db.String(100))
 	servers = db.relationship('GameServer', backref='user', lazy='dynamic')
 	accounts = db.relationship('Account', backref='user', lazy='dynamic')
 
