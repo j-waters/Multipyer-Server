@@ -89,11 +89,11 @@ def register():
 		return flask.render_template('register.html')
 	if flask.request.method == 'POST':
 		if flask.request.form['username'] == "":
-			raise message(message="<p>Make sure you enter a username</p>", url=flask.url_for('register'))
+			return message(message="<p>Make sure you enter a username</p>", url=flask.url_for('register'))
 		if flask.request.form['email'] == "":
-			raise message(message="<p>Make sure you enter an email</p>", url=flask.url_for('register'))
+			return message(message="<p>Make sure you enter an email</p>", url=flask.url_for('register'))
 		if flask.request.form['password'] == "":
-			raise message(message="<p>Make sure you enter a password</p>", url=flask.url_for('register'))
+			return message(message="<p>Make sure you enter a password</p>", url=flask.url_for('register'))
 		try:
 			u = models.User(flask.request.form['username'], flask.request.form['email'], flask.request.form['password'],
 			                level=1)
