@@ -59,6 +59,10 @@ def console():
 def home():
 	return flask.render_template('home.html')
 
+@app.route('/docs')
+def docs():
+	return ""
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -219,9 +223,8 @@ def acc_data_set():
 
 
 @app.before_request
-def always():
-	return
-	print(flask.request.path)
+def before_request():
+    flask.g.user = flask_login.current_user
 
 
 def init():
