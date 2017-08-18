@@ -1,0 +1,53 @@
+<form id="settingsForm" class="login-form" action="/">
+	<div class="row">
+		<div class="col s10">
+			<div class="row">
+				<div class="col s2" style="padding-left:0">
+					<label class="center-align">Server ID</label>
+					<h6 class="tooltipped" id="serverID" onclick="copyToClipboard('#serverID')" data-tooltip="Click to copy to clipboard">{{selected.secret}}</h6>
+				</div>
+				<div class="col s8">
+					<label class="center-align" >User ID</label>
+					<h6 class="tooltipped" id="userID" onclick="copyToClipboard('#userID')" data-tooltip="Click to copy to clipboard">{{selected.user.secret}}</h6>
+				</div>
+			</div>
+			<div class="input-field row">
+				<input value="{{selected.name}}" name="servername" id="servername" type="text">
+				<label for="servername" class="center-align">Server Name</label>
+			</div>
+		</div>
+		<div class="col s2" style="text-align:center">
+			<h3>Gears:</h3>
+			<h4 id="gears">6/60</h4>
+		</div>
+	</div>
+	<div class="input-field row tooltipped" style="margin-bottom: 3rem;"
+		 data-tooltip="The minimum number of clients that must connect before the server can start">
+		<p class="range-field">
+			<input name="min_clients" type="range" id="minPlayers" min="0" max="30" value={{selected.min_clients}} />
+			<label for="minPlayers" class="center-align">Minimum Clients</label>
+		</p>
+	</div>
+	<div class="input-field row tooltipped" style="margin-bottom: 3rem;"
+		 data-tooltip="The minimum number of clients that must be connected for the server to stay running">
+		<p class="range-field">
+			<input name="min_stop" type="range" id="minStop" min="0" max="30" value={{selected.min_stop}} />
+			<label for="minStop" class="center-align">Hard Minimum</label>
+		</p>
+	</div>
+	<div class="input-field row tooltipped" style="margin-bottom: 3rem;"
+		 data-tooltip="The maximum number of clients that can connect">
+		<p class="range-field">
+			<input name="max_clients" type="range" id="maxPlayers" min="0" max="30" value={{selected.max_clients}} />
+			<label for="maxPlayers" class="center-align">Maximum Clients</label>
+		</p>
+	</div>
+	<div class="input-field row tooltipped"
+		 data-tooltip="The maximum number of instances of this server that can run at once">
+		<p class="range-field">
+			<input name="max_instances" type="range" id="maxInstances" min="0" max="20" value={{selected.max_instances}} />
+			<label for="maxInstances" class="center-align">Maximum Instances</label>
+		</p>
+	</div>
+	<button type="submit" class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Apply</button>
+</form>

@@ -52,8 +52,53 @@ def websocket(ws):
 @app.route('/console')
 @flask_login.login_required
 def console():
-	return flask.render_template('console.html')
+	gsid = flask.request.args.get('server')
+	servers = models.GameServer.query.filter_by(user=flask_login.current_user)
+	if gsid is None:
+		gs = servers.first()
+	else:
+		gs = models.GameServer.query.filter_by(id=gsid).first()
+	return flask.render_template('console.html', servers=servers, selected=gs)
 
+@app.route('/server_settings', methods=['GET', 'POST'])
+@flask_login.login_required
+def server_settings():
+	server = models.GameServer.query.filter_by(id=flask.request.form['id']).first() # type: models.GameServer
+	server.min_clients = flask.request.form['min_clients']
+	server.min_stop = flask.request.form['min_stop']
+	server.max_clients = flask.request.form['max_clients']
+	server.max_instances = flask.request.form['max_instances']
+	server.name = flask.request.form['name']
+	server.setup = True
+	db.session.commit()
+	return dumps({"state": server.get_state(), "id": server.id, "gears": server.get_gears()})
+
+@app.route('/server_data/<target>', methods=['GET', 'POST'])
+@flask_login.login_required
+def server_data(target):
+	if target == 'all':
+		servers = models.GameServer.query.filter_by(user=flask_login.current_user).all()
+		out = {}
+		for server in servers: # type: models.GameServer
+			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running()}
+		return dumps(out)
+	else:
+		server = models.GameServer.query.filter_by(id=int(target)).first()  # type: models.GameServer
+		return dumps({"state": server.get_state(), "id": server.id, "gears": server.get_gears()})
+
+
+@app.route('/create_server', methods=['GET', 'POST'])
+@flask_login.login_required
+def create_server():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('console'))
+
+	name = flask.request.form['gsname']
+	gs = models.GameServer(flask_login.current_user, name, 2, 2, 2, 1)
+	db.session.add(gs)
+	db.session.commit()
+	gs.gen_secret(db)
+	return flask.redirect(flask.url_for('console', server=gs.id) + "#settings")
 
 @app.route('/')
 def home():
@@ -82,6 +127,10 @@ def logout():
     flask_login.logout_user()
     return flask.redirect(flask.url_for('home'))
 
+@app.route('/reset_password')
+def password_reset():
+    return "Password Reset"
+
 @login_manager.user_loader
 def load_user(id):
     return models.User.query.get(int(id))
@@ -103,6 +152,7 @@ def register():
 			                level=1)
 			db.session.add(u)
 			db.session.commit()
+			u.gen_secret(db)
 			flask_login.login_user(u)
 			return flask.redirect(flask.url_for('registered'))
 		except SQLException.IntegrityError as e:
@@ -232,13 +282,12 @@ def init():
 	db.drop_all()
 	db.create_all()
 
-	"""u = models.User("bob", "mail", "123")
+	u = models.User("bob", "mail", "123")
 	db.session.add(u)
 
-	g = models.GameServer(u, "fun", 2, 2, True, False)
-	db.session.add(g)
+	db.session.commit()
+	u.gen_secret(db)
 
-	db.session.commit()"""
 	print("Database Setup Complete")
 
 #init()

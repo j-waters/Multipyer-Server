@@ -4550,6 +4550,7 @@ if (jQuery) {
       var paddingLeft = parseInt(thumb.parent().css('padding-left'));
       var marginLeft = -7 + paddingLeft + 'px';
       thumb.velocity({ height: "30px", width: "30px", top: "-30px", marginLeft: marginLeft }, { duration: 300, easing: 'easeOutExpo' });
+      $
     };
 
     var calcRangeOffset = function (range) {

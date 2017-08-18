@@ -25,12 +25,15 @@ class User(db.Model):
 		self.email = email
 		self.level = level
 		self.confirmed = False
-		self.secret = '1a' #str(self.id).zfill(4) + hexlify(urandom(24)).decode()
 		self.password = generate_password_hash(password)
 		self.created = datetime.utcnow()
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
+
+	def gen_secret(self, db):
+		self.secret = str(self.id).zfill(4) + hexlify(urandom(24)).decode()
+		db.session.commit()
 
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
@@ -47,12 +50,6 @@ class User(db.Model):
 	def get_id(self):
 		return str(self.id)
 
-"""def set_password(self, password):
-		self.pw_hash = generate_password_hash(password)
-
-	def check_password(self, password):
-		return check_password_hash(self.pw_hash, password)"""
-
 
 class GameServer(db.Model):
 	__tablename__ = 'servers'
@@ -60,25 +57,48 @@ class GameServer(db.Model):
 	name = db.Column(db.String(40))
 	secret = db.Column(db.String(8))
 	min_clients = db.Column(db.Integer)
+	min_stop = db.Column(db.Integer)
 	max_clients = db.Column(db.Integer)
 	created = db.Column(db.DateTime)
-	hard_min = db.Column(db.Boolean)
-	persistent = db.Column(db.Boolean)
+	setup = db.Column(db.Boolean)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	instances = db.relationship('Instance', backref='server', lazy='dynamic')
+	max_instances = db.Column(db.Integer)
 
-	def __init__(self, user, name, min_clients, max_clients, hard_min, persistent):
+	def __init__(self, user, name, min_clients, max_clients, min_stop, max_instances):
 		self.name = name
-		self.secret = "GS1"#"GS" + str(self.id) + hexlify(urandom(2)).decode()
 		self.min_clients = min_clients
 		self.max_clients = max_clients
-		self.hard_min = hard_min
-		self.persistent = persistent
+		self.min_stop = min_stop
+		self.max_instances = max_instances
 		self.created = datetime.utcnow()
+		self.setup = False
 		user.servers.append(self)
 
 	def __repr__(self):
 		return '<Game Server {}>'.format(self.name)
+
+	def gen_secret(self, db):
+		self.secret = "GS" + str(self.id).zfill(2) + hexlify(urandom(2)).decode()
+		db.session.commit()
+
+	def get_gears(self):
+		gears = self.max_instances * 6
+		if self.max_clients - 2 > 0:
+			gears += self.max_instances * (self.max_clients - 2) * 2
+		if self.min_stop == 0:
+			gears += 2
+		return gears
+
+	def get_running(self):
+		return len(self.instances.filter_by(stop=None).all())
+
+	def get_state(self):
+		if self.setup == False:
+			return "error"
+		else:
+			return "good"
+
 
 
 class Account(db.Model):

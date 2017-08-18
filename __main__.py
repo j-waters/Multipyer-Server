@@ -9,9 +9,11 @@ from werkzeug.serving import run_with_reloader
 from werkzeug.debug import DebuggedApplication
 from os import path
 import os
+from requests import get
 
 
 def run_server():
+	get('http://multipyer.lightopa.com')
 	application = DebuggedApplication(app)
 
 	server = pywsgi.WSGIServer(('127.0.0.1', 8000), application,

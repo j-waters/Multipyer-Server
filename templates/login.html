@@ -81,15 +81,6 @@ line-height: inherit;
 </head>
 
 <body class="light-blue lighten-1">
-<!-- Start Page Loading -->
-<div id="loader-wrapper">
-	<div id="loader"></div>
-	<div class="loader-section section-left"></div>
-	<div class="loader-section section-right"></div>
-</div>
-<!-- End Page Loading -->
-
-
 <div id="login-page" class="row">
 	<div class="col s12 z-depth-4 card-panel">
 		<form class="login-form" method="post">
@@ -129,10 +120,10 @@ line-height: inherit;
 			</div>
 			<div class="row">
 				<div class="input-field col s6 m6 l6">
-					<p class="margin medium-small"><a href="page-register.html">Register Now!</a></p>
+					<p class="margin medium-small"><a href="{{ url_for('register') }}">Register Now!</a></p>
 				</div>
 				<div class="input-field col s6 m6 l6">
-					<p class="margin right-align medium-small"><a href="page-forgot-password.html">Forgot password ?</a>
+					<p class="margin right-align medium-small"><a href="{{ url_for('password_reset') }}">Forgot password ?</a>
 					</p>
 				</div>
 			</div>

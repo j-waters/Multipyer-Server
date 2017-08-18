@@ -11,9 +11,12 @@
 	<link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/custom.css') }}"
 		  media="screen,projection"/>
 
+	<link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/nouislider.css') }}"
+		  media="screen,projection"/>
+
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>Multipyer Console</title>
+	<title>Console | Multipyer</title>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
@@ -48,6 +51,35 @@
 			height: 256px;
 		}
 
+		#addServer {
+			top: 50%;
+			transform: translateY(-50%) !important;
+		}
+
+		.range-field label {
+			font-size: 0.8rem;
+			transform: translateY(-14px);
+		}
+
+		.range-field {
+		    margin-left: 0.75rem;
+			margin-right: 0.75rem;
+    	}
+
+    	.backdrop {
+    		background-color: #26a69a
+    	}
+
+    	h6 {
+    		margin-top: 0;
+    		font-size: 1.5rem;
+    	}
+
+    	h7 {
+    		font-size: 1.23rem;
+    	}
+
+
 	</style>
 </head>
 
@@ -71,6 +103,24 @@
 	</div>
 </div>
 
+<div id="addServer" class="modal">
+	<form class="login-form" action="{{ url_for('create_server') }}" method="post">
+		<div class="modal-content">
+			<h4>Create Server</h4>
+
+			<div class="input-field">
+				<input name="gsname" id="gsname" type="text" style="margin: auto;">
+				<label for="gsname" class="center-align">Server Name</label>
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+			<button type="submit" class="modal-action modal-close waves-effect waves-blue btn-flat">Create</button>
+		</div>
+	</form>
+</div>
+
 <ul id="accountdrop" class="dropdown-content">
 	<li id="name" style="font-size: 16px;
     color: #9e9e9e;
@@ -86,7 +136,8 @@
 
 <nav style="position:relative; z-index:100">
 	<div class="nav-wrapper light-blue lighten-1">
-		<img src="favicons/favicon.png" style="width:64px; height:64px"><a href="#!" class="brand-logo">Multipyer</a>
+		<img src="favicons/favicon.png" style="width:60px; height:60px;margin-top: 2px;"><a href="#!"
+																							class="brand-logo">Multipyer</a>
 		<ul class="right hide-on-med-and-down">
 			<li><a href="sass.html"><i class="material-icons">search</i></a></li>
 			<li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
@@ -111,28 +162,52 @@
 			<li class="collection-header">
 				<h5 style="margin-top: 0px;margin-bottom: 0px;text-align: center;">
 					Servers</h5></li>
-			<a href="#T">
-				<li class="collection-item avatar active">
 
+
+			{% for server in servers %}
+			<a href="{{url_for('console', server=server.id)}}">
+				<li id="S{{server.id}}" class="collection-item avatar {% if server == selected %} active {% endif %}">
+					{% if server.get_state() == "good" %}
 					<img class="circle" src="{{ url_for('static', filename='images/working.png')}}">
-					<span class="title">Server 1</span>
-					<p>Using 18 Gears
-						<br> Last run 2 days ago
+					{% endif %}
+					{% if server.get_state() == "warning" %}
+					<img class="circle" src="{{ url_for('static', filename='images/warning.png')}}">
+					{% endif %}
+					{% if server.get_state() == "error" %}
+					<img class="circle" src="{{ url_for('static', filename='images/error.png')}}">
+					{% endif %}
+					<span class="title">{{ server.name }}</span>
+					<p>Using <span id="sGears">{{server.get_gears()}}</span> Gears
+						<br> <span id="sInstances">{{server.get_running()}}</span> Running Instances
 					</p>
 				</li>
 			</a>
-			<li class="collection-item">Alvin</li>
-			<li class="collection-item">Alvin</li>
-			<li class="collection-item">Alvin</li>
+			{% endfor %}
+			<a id="addButton" class="modal-trigger" href="#addServer">
+				<li class="collection-item" style="text-align: center;">
+					<i id="addIcon" class="material-icons" style="color: #bbb;font-size: 50px;">add_circle</i>
+				</li>
+			</a>
+
+				<li class="collection-item" style="text-align: center; cursor:pointer" onclick="refresh_servers()">
+					<i class="material-icons" style="color: #bbb;font-size: 50px;">refresh</i>
+				</li>
+
 		</ul>
 
-		<footer class="page-footer">
+		<div style="bottom: 0;
+    position: fixed;
+    width: inherit;">
 			<div class="divider"></div>
-			<p>You have a basic account. Using 18 out of 50 gears</p>
-		</footer>
+			<p style="margin-top: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 0px;">You have a basic account. Using 18 out of 50 gears</p>
+		</div>
 
 	</div>
 
+	{% if selected is not none %}
 	<div class="col s12 m8 l9" style="padding-left: 0px;padding-right: 0px;">
 		<!-- Note that "m8 l9" was added -->
 		<!-- Teal page content
@@ -151,27 +226,170 @@
 				</ul>
 			</div>
 			<div id="overview" class="col s12">Test 1</div>
-			<div id="settings" class="col s12">Test 2</div>
+			<div id="settings" class="col s12">{% include 'settings.html' %}</div>
 			<div id="instances" class="col s12">Test 4</div>
 			<div id="accounts" class="col s12">Test 4</div>
 		</div>
 
 	</div>
+	{% endif %}
 
 </div>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/nouislider.js') }}"></script>
 
 <script type="text/javascript">
 
 	document.addEventListener("DOMContentLoaded", function(){
-	$('.preloader-background').delay(1700).fadeOut('slow');
+		$('.preloader-background').delay(1700).fadeOut('slow');
 
-	$('.preloader-wrapper')
-		.delay(1700)
-		.fadeOut();
-});
+		$('.preloader-wrapper')
+			.delay(1700)
+			.fadeOut();
+	});
+
+	$("#addButton").hover(function(){
+		$("#addIcon").html("add_circle_outline")
+	},
+	function(){
+		$("#addIcon").html("add_circle")
+	}
+	)
+
+	$(document).ready(function() {
+		Materialize.updateTextFields();
+		$('.modal').modal({endingTop: '50%'});
+	  });
+
+	  $('input[type=range]').on('input focus mousedown touchstart', function () {
+			var label = $("label[for='"+$(this).attr('id')+"']");
+			if ($(this).val() < $(this)[0].max / 4){
+				label.css('transform', 'translateY(-50px)');
+			}
+			else {
+				label.css('transform', '');
+			}
+		});
+
+		$('input[type=range]').on('mouseleave touchleave', function () {
+			var label = $("label[for='"+$(this).attr('id')+"']");
+			label.css('transform', '');
+			$(this).blur()
+		})
+
+	$('#minPlayers').on('input', function() {
+		if (parseInt($(this).val()) > parseInt($('#maxPlayers').val())){
+			$('#maxPlayers').val($(this).val())
+		}
+
+		if (parseInt($(this).val()) < parseInt($('#minStop').val())){
+			$('#minStop').val($(this).val())
+			$('#minStop').trigger('input')
+		}
+		update_gears()
+	})
+
+	$('#minStop').on('input', function() {
+		if (parseInt($(this).val()) > parseInt($('#minPlayers').val())){
+			$('#minPlayers').val($(this).val())
+			$('#minPlayers').trigger('input')
+		}
+		update_gears()
+	})
+
+	$('#maxPlayers').on('input', function() {
+		if (parseInt($(this).val()) < parseInt($('#minPlayers').val())){
+			$('#minPlayers').val($(this).val())
+		}
+
+		if (parseInt($(this).val()) < parseInt($('#minStop').val())){
+			$('#minStop').val($(this).val())
+		}
+		update_gears()
+	})
+
+	$('#maxInstances').on('input', function() {
+		update_gears()
+	})
+
+	function update_gears(){
+		var gears = parseInt($('#maxInstances').val()) * 6
+		if (parseInt($('#maxPlayers').val()) - 2 > 0){
+			gears += parseInt($('#maxInstances').val()) * (parseInt($('#maxPlayers').val()) - 2) * 2
+		}
+		if (parseInt($('#minStop').val()) == 0){
+			gears += 2
+		}
+		$('#gears').html(gears + '/60')
+
+	}
+
+	$(document).ready(function(){
+		$('.tooltipped').tooltip({
+			delay: 50,
+		});
+		update_gears()
+	  });
+
+	  function copyToClipboard(element) {
+		  var $temp = $("<input>");
+		  $("body").append($temp);
+		  $temp.val($(element).text()).select();
+		  document.execCommand("copy");
+		  $temp.remove();
+		  Materialize.toast('Copied to clipboard!', 3000, 'rounded')
+		}
+
+		$("#settingsForm").submit(function(event) {
+
+                /* stop form from submitting normally */
+                event.preventDefault();
+
+                /* get some values from elements on the page: */
+                var $form = $(this)
+
+                /* Send the data using post */
+                var posting = $.post("{{ url_for('server_settings') }}", {
+                	id: {{selected.id}},
+                    min_clients: $form.find('input[name="min_clients"]').val(),
+                    max_clients: $form.find('input[name="max_clients"]').val(),
+                    min_stop: $form.find('input[name="min_stop"]').val(),
+                    max_instances: $form.find('input[name="max_instances"]').val(),
+                    name: $form.find('input[name="servername"]').val()
+                });
+
+                /* Put the results in a div */
+                posting.done(function(data) {
+                	Materialize.toast('Settings Applied', 3000, 'rounded')
+					refresh_servers()
+                });
+            });
+
+            function refresh_servers(){
+            	$.get("{{ url_for('server_data', target='all') }}", function (data) {
+            		data = JSON.parse(data)
+            		for (var key in data) {
+            			dat = data[key]
+						if (dat['state'] == 'good'){
+							$('#S' + dat['id']).children('img').attr('src', '{{ url_for('static', filename='images/working.png')}}')
+						}
+						if (dat['state'] == 'warning'){
+							$('#S' + dat['id']).children('img').attr('src', '{{ url_for('static', filename='images/warning.png')}}')
+						}
+						if (dat['state'] == 'error'){
+							$('#S' + dat['id']).children('img').attr('src', '{{ url_for('static', filename='images/error.png')}}')
+						}
+						$('#S' + dat['id']).children('p').children('#sGears').html(dat['gears'])
+						$('#S' + dat['id']).children('p').children('#sInstances').html(dat['instances'])
+					}
+            	})
+            }
+
+
+
+
 </script>
 </body>
 
