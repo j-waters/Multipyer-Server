@@ -1,6 +1,7 @@
 site_name: Multipyer Docs
 theme_dir: 'material'
 copyright: 'Copyright &copy; 2017 James'
+site_url: http://multipyer.lightopa.com
 extra:
   palette:
     primary: 'light blue'
