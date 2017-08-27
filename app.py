@@ -39,8 +39,36 @@ import models
 
 app.process = Process(os.getpid())
 
+@app.route('/docs/')
+def doc_index():
+	return flask.send_file('templates/mdocs/site/index.html')
 
-@sockets.route('/server/')
+@app.route('/docs/api/api_doc')
+def api_docs():
+	return flask.render_template('api/api.html')
+
+@app.route('/docs/api/_static/font/<path:path>')
+def api_s(path):
+	return flask.send_file('static/fonts/api_docs/' + path)
+
+"""@app.route('/docs/font/<path:path>')
+def api_f(path):
+	return flask.send_file('templates/api/_static/font/' + path)"""
+
+@app.route('/docs/<path:path>')
+def doc_f(path):
+	return flask.render_template('mdocs/site/' + path + '/index.html')
+
+@app.route('/docs/assets/<path:path>')
+def assets(path):
+	return flask.send_file('templates/mdocs/site/assets/' + path)
+
+@app.route('/docs/mkdocs/<path:path>')
+def mkdocs(path):
+	return flask.send_file('templates/mdocs/site/mkdocs/' + path)
+
+
+@sockets.route('/server')
 def websocket(ws):
 	client = manager.add_client(ws)
 	print("Connection from", client.unid)
@@ -104,10 +132,6 @@ def create_server():
 def home():
 	return flask.render_template('home.html')
 
-@app.route('/docs')
-def docs():
-	return ""
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -133,7 +157,7 @@ def password_reset():
 
 @login_manager.user_loader
 def load_user(id):
-    return models.User.query.get(int(id))
+	return models.User.query.get(int(id))
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -189,8 +213,12 @@ def check_email():
 
 
 @app.route('/static/css/fonts/<path:path>')
-def stat(path):
+def font_path(path):
 	return flask.send_file('static/fonts/' + path)
+
+@app.route('/static/<path:path>')
+def stat(path):
+	return flask.send_file('static/' + path)
 
 
 @app.route('/favicons/<path:path>')

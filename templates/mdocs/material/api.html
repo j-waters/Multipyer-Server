@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <title>Multipyer API &mdash; Multipyer 0.1.0 documentation</title>
+    
+
+    
+
+    
+      
+    
+
+    
+      <!--link rel="stylesheet" href="_static/css/theme.css" type="text/css" /-->
+	  <script type="text/javascript" src="/static/js/jquery-3.2.1.min.js"></script>
+
+	  <style>
+
+	  @font-face {
+  font-family: 'FontAwesome';
+  src: url('_static/font/fontawesome-webfont.eot?v=4.7.0');
+  src: url('_static/font/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('_static/font/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('_static/font/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('_static/font/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('_static/font/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('_static/font/NotoSans-Regular.eot');
+  src: local('Noto Sans Regular'), local('NotoSans-Regular'), url('_static/font/NotoSans-Regular.woff2') format('woff2'), url('_static/font/NotoSans-Regular.woff') format('woff'), url('_static/font/NotoSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('_static/font/NotoSans-Bold.eot');
+  src: local('Noto Sans Bold'), local('NotoSans-Bold'), url('_static/font/NotoSans-Bold.woff2') format('woff2'), url('_static/font/NotoSans-Bold.woff') format('woff'), url('_static/font/NotoSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('_static/font/NotoSans-Italic.eot');
+  src: local('Noto Sans Italic'), local('NotoSans-Italic'), url('_static/font/NotoSans-Italic.woff2') format('woff2'), url('_static/font/NotoSans-Italic.woff') format('woff'), url('_static/font/NotoSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('_static/font/NotoSans-BoldItalic.eot');
+  src: local('Noto Sans BoldItalic'), local('NotoSans-BoldItalic'), url('_static/font/NotoSans-BoldItalic.woff2') format('woff2'), url('_static/font/NotoSans-BoldItalic.woff') format('woff'), url('_static/font/NotoSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+		  div.article {
+    overflow: auto;
+    background: #ffffff;
+    color: #313131;
+    display: block;
+}
+
+div.article div.content {
+    padding: 2rem;
+}
+
+dl.class {
+	margin: 0;
+}
+
+div.article dl.class > dt, div.article dl.method > dt, div.article dl.function > dt, div.article dl.attribute > dt {
+    /* margin-top: 3rem; */
+    /* margin-bottom: 1rem; */
+    font-weight: normal;
+    font-family: "Aleo";
+    font-size: 1.6rem;
+    letter-spacing: .02em;
+    line-height: 1.5rem;
+    padding: .75rem;
+    background: #ECEFF1;
+    font-family: "Noto Sans", sans-serif;
+}
+
+dd {
+    display: block;
+    -webkit-margin-start: 40px;
+}
+
+div.article p {
+    line-height: 2.16rem;
+    max-width: 50em;
+}
+
+dl {
+    display: block;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+
+table[Attributes Style] {
+    border-top-width: thin;
+    border-right-width: thin;
+    border-bottom-width: thin;
+    border-left-width: thin;
+    border-top-style: hidden;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+    border-collapse: collapse;
+}
+
+table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: grey;
+}
+
+th {
+    font-weight: bold;
+    text-align: -internal-center;
+}
+
+td, th {
+    display: table-cell;
+    vertical-align: inherit;
+}
+
+table.field-list th.field-name {
+    display: block;
+    text-align: left;
+}
+
+table.field-list td.field-body {
+    display: block;
+    text-align: left;
+}
+
+table.field-list td.field-body p {
+    margin-top: 0rem;
+}
+
+div.article dl.class > dt > em.property:first-child, div.article dl.method > dt > em.property:first-child, div.article dl.function > dt > em.property:first-child, div.article dl.attribute > dt > em.property:first-child {
+    display: inline-block;
+    padding: 0rem .35rem;
+    margin-right: .35rem;
+    font-weight: bold;
+    font-size: 1.28rem;
+    line-height: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #51adf6;
+}
+
+div.article dl.class > dt em, div.article dl.method > dt em, div.article dl.function > dt em, div.article dl.attribute > dt em {
+    color: #51adf6;
+}
+
+div.article dl.class > dt code.descclassname, div.article dl.method > dt code.descclassname, div.article dl.function > dt code.descclassname, div.article dl.attribute > dt code.descclassname {
+    color: #a0a0a0;
+    font-style: italic;
+}
+theme.css:1165
+div.article dl.class > dt code, div.article dl.method > dt code, div.article dl.function > dt code, div.article dl.attribute > dt code {
+    font-family: inherit;
+}
+theme.css:140
+code, kbd, samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}
+user agent stylesheet
+tt, code, kbd, samp {
+    font-family: monospace;
+}
+
+div.article dl.class > dt code.descname, div.article dl.method > dt code.descname, div.article dl.function > dt code.descname, div.article dl.attribute > dt code.descname {
+    font-weight: bold;
+}
+
+div.article div.content {
+    padding: 0;
+}
+
+div.article h1 {
+display: none
+}
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+}
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+article {
+	margin-right: 2.4rem;
+    margin-left: 2.4rem;
+    margin: 0 1.6rem 2.4rem;
+    padding-top: 2.4rem;
+}
+
+.md-nav__item:last-child {
+    padding-bottom: inherit;
+}
+
+.headerlink {
+	font-family: Material Icons;
+	font-size: 18px;
+    vertical-align: sub;
+
+}
+
+.headerlink:before {
+    content: "link";
+    color: #000000;
+}
+
+div.article a:link, div.article a:visited {
+    color: #2196F3;
+}
+	  </style>
+
+    
+          <link rel="index" title="Index"
+                href="genindex.html"/>
+          <link rel="search" title="Search" href="search.html"/>
+      <link rel="top" title="Multipyer 0.1.0 documentation" href="index.html"/>
+          <link rel="prev" title="Welcome to Multipyer’s documentation!" href="index.html"/> 
+
+  </head>
+  <body role="document">
+
+    
+
+    <div class="main">
+
+
+      
+        <div class="article">
+          <div class="content">
+            <div class="content-body" itemprop="articleBody">
+              
+  <div class="section" id="multipyer-api">
+<h1>Multipyer API<a class="headerlink" href="#multipyer-api" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="multipyer.Server">
+<em class="property">class </em><code class="descclassname">multipyer.</code><code class="descname">Server</code><span class="sig-paren">(</span><em>address=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multipyer/server.html#Server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multipyer.Server" title="Permalink to this definition">¶</a></dt>
+<dd><p>A server object is used everytime you want to make a connection to a remote server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The url of the remote server</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="multipyer.Server.Payload">
+<code class="descname">Payload</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multipyer/server.html#Server.Payload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multipyer.Server.Payload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Payload object. Keyword arguments are stored as attributes of the object. Most Payloads to be sent to the server
+will require an action property and a target property.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#multipyer.Server.Payload" title="multipyer.Server.Payload">Payload</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – The values that will be stored in this Payload</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Payload object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multipyer.Server.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>gsecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multipyer/server.html#Server.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multipyer.Server.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will establish a socket connection to the server corresponding with the given secret</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gsecret</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="multipyer.Server.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>payload</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multipyer/server.html#Server.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multipyer.Server.send" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            </div>
+          </div>
+
+        </div>
+      
+    </div>
+
+    <footer class="md-footer">
+</footer>
+
+    
+
+
+  <script>
+	$( document ).ready(function() {
+		$("article.md-content__inner").removeClass()
+		style = "font-weight: 300;letter-spacing: -.01em;margin: 0 0 1rem;color: rgba(0,0,0,.54);font-size: 3.125rem;line-height: 1.3;font-family: 'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;font-feature-settings: 'kern','liga';"
+		$("h1").attr("style", $("h1").attr("style") + "; " + style);
+
+		$(".headerlink").html("")
+
+		$('.viewcode-link').parent().remove()
+
+		nav = $("nav.md-nav.md-nav--secondary")
+		nav.append('<label class="md-nav__title" for="toc">Table of contents</label>')
+		$('dt').each(function(i, d){
+			if (d.children[0].innerHTML != "class") {
+				if (i == $('dt').length -1){s = "padding-bottom: 1.2rem"}
+				else {s = ""}
+				nav.append('<ul class="md-nav__list" data-md-scrollfix=""><li class="md-nav__item" style="' + s + '"><a href="#' + d.id + '" title="Quick start" class="md-nav__link">' + d.children[0].innerHTML + '</a></li></ul>')
+
+			}
+  		})
+	});
+
+</script>
+
+  </body>
+</html>

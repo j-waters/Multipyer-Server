@@ -1,0 +1,13 @@
+site_name: Multipyer Docs
+theme_dir: 'material'
+copyright: 'Copyright &copy; 2017 James'
+extra:
+  palette:
+    primary: 'light blue'
+    accent: 'pink'
+
+pages:
+  - Introduction: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+  - API: api.md

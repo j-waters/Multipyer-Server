@@ -14,6 +14,7 @@ from requests import get
 
 def run_server():
 	get('http://multipyer.lightopa.com')
+	app.config['TESTING'] = True
 	application = DebuggedApplication(app)
 
 	server = pywsgi.WSGIServer(('127.0.0.1', 8000), application,

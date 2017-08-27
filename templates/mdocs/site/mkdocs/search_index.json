@@ -1,0 +1,49 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "Welcome to Multipyer\n\n\nMultipyer is a complete solution for creating online multiplayer games using Python.\n\n\nQuick start\n\n\nInstall the latest version of Material with \npip\n:\n\n\npip install multipyer\n\n\n\n\nAdd the following line to your Python file:\n\n\nfrom multipyer import Server\nserver = Server()\n\n\n\n\nFor detailed instructions see the \ngetting started guide\n.",
+            "title": "Introduction"
+        },
+        {
+            "location": "/#welcome-to-multipyer",
+            "text": "Multipyer is a complete solution for creating online multiplayer games using Python.",
+            "title": "Welcome to Multipyer"
+        },
+        {
+            "location": "/#quick-start",
+            "text": "Install the latest version of Material with  pip :  pip install multipyer  Add the following line to your Python file:  from multipyer import Server\nserver = Server()  For detailed instructions see the  getting started guide .",
+            "title": "Quick start"
+        },
+        {
+            "location": "/getting-started/installation/",
+            "text": "Installation\n\n\nPIP\n\n\nThe simplest way to install the Multipyer Client module is by using \npip\n:\n\n\npip install multipyer\n\n\n\n\nThe multipyer client supports all versions of Python 3.\n\n\nGithub\n\n\nAlternatively, the module can be locally installed by cloning the github repository\nand copying the 'multipyer' folder to the folder that contains your project.",
+            "title": "Installation"
+        },
+        {
+            "location": "/getting-started/installation/#installation",
+            "text": "",
+            "title": "Installation"
+        },
+        {
+            "location": "/getting-started/installation/#pip",
+            "text": "The simplest way to install the Multipyer Client module is by using  pip :  pip install multipyer  The multipyer client supports all versions of Python 3.",
+            "title": "PIP"
+        },
+        {
+            "location": "/getting-started/installation/#github",
+            "text": "Alternatively, the module can be locally installed by cloning the github repository\nand copying the 'multipyer' folder to the folder that contains your project.",
+            "title": "Github"
+        },
+        {
+            "location": "/api/",
+            "text": "Multipyer API",
+            "title": "API"
+        },
+        {
+            "location": "/api/#multipyer-api",
+            "text": "",
+            "title": "Multipyer API"
+        }
+    ]
+}
