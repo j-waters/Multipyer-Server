@@ -29,9 +29,7 @@ app.secret_key = 'secret key'
 db = SQLAlchemy(app)
 
 import gevent
-import manager
-help(manager)
-manager = manager.Manager()
+manager = None
 from psutil import Process
 import locals
 
@@ -70,6 +68,10 @@ def mkdocs(path):
 
 @sockets.route('/server')
 def websocket(ws):
+	global manager
+	if manager == None:
+		from manager import Manager
+		manager = Manager()
 	client = manager.add_client(ws)
 	print("Connection from", client.unid)
 
