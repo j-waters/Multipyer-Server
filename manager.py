@@ -2,7 +2,6 @@ import gevent
 from client import Client
 from server import Server
 import models
-from app import app
 
 
 class Manager:
