@@ -15,5 +15,15 @@ sys.argv = shlex.split(cmd)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
 os.chdir(os.path.abspath(os.path.dirname(__file__)))
 gunicorn.app.wsgiapp.run()"""
-from app import app as application
+#from app import app as application
 
+from flask import Flask
+application = Flask(__name__)
+
+@application.route("/")
+def hello():
+    return "Hello World!"
+
+if __name__ == "__main__":
+	print("main")
+    application.run()
