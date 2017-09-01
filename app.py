@@ -2,8 +2,6 @@ from json import dumps, loads
 
 from gevent import monkey
 
-print("APP IMPORT")
-
 monkey.patch_all()
 
 import flask
@@ -33,9 +31,9 @@ app.secret_key = 'secret key'
 db = SQLAlchemy(app)
 
 import gevent
-from manager import Manager
+import manager
 
-manager = Manager()
+manager = manager.Manager()
 from psutil import Process
 import locals
 
