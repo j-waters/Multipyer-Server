@@ -1,7 +1,11 @@
+print("IMPORT MANAGER 1")
+
 import gevent
 from client import Client
 from server import Server
 import models
+
+print("IMPORT MANAGER 2")
 
 
 class Manager:
