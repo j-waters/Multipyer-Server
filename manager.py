@@ -1,8 +1,11 @@
 print("IMPORT MANAGER 1")
 
 import gevent
+print("mgr a")
 from client import Client
+print("mgr b")
 from server import Server
+print("mgr c")
 import models
 
 print("IMPORT MANAGER 2")

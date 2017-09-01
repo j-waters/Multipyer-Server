@@ -1,10 +1,15 @@
+print("IMPORT MODELS 1")
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+print("MDL a")
 from app import db
+print("MDL b")
 from datetime import datetime
 from json import dumps
 from binascii import hexlify
 from os import urandom
+
+print("IMPORT MODELS 1")
 
 
 class User(db.Model):
