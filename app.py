@@ -2,6 +2,8 @@ from json import dumps, loads
 
 from gevent import monkey
 
+print("APP IMPORT")
+
 monkey.patch_all()
 
 import flask
@@ -10,6 +12,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import flask_login
 import os
+print(os.listdir('.'))
+print(os.path.dirname(os.path.realpath(__file__)))
 from sqlalchemy import exc as SQLException
 
 app = flask.Flask(__name__)
