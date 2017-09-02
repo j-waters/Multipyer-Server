@@ -13,7 +13,6 @@ from requests import get
 
 
 def run_server():
-	get('http://multipyer.lightopa.com')
 	app.config['TESTING'] = True
 	application = DebuggedApplication(app)
 
