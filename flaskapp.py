@@ -21,10 +21,12 @@ login_manager.login_view = 'login'
 try:
 	app.config.from_pyfile('config.cfg')
 except FileNotFoundError:
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('OPENSHIFT_POSTGRESQL_DB_URL')
+	from flask_heroku import Heroku
+	heroku = Heroku(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'secret key'
+
 
 db = SQLAlchemy(app)
 
