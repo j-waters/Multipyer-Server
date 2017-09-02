@@ -1,6 +1,6 @@
 from gevent import monkey
 monkey.patch_all()
-from app import app
+from flaskapp import app
 
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
