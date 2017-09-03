@@ -1,7 +1,9 @@
 import gevent
 from client import Client
 from server import Server
+from payload import Payload
 import models
+import locals
 
 class Manager:
 
@@ -11,6 +13,7 @@ class Manager:
 		self.clients = {}
 		self.servers = {}
 		self._curid = 0
+		self.inQueue = []
 		gevent.spawn(self.update)
 
 	def add_client(self, ws):
@@ -34,6 +37,11 @@ class Manager:
 		server = Server(gs)
 		return server
 
+	def kill(self, client):
+		for k, v in self.queue.items():
+			if client in v:
+				v.remove(client)
+		self.clients = {key: value for key, value in self.clients.items() if value != client}
 
 	def update(self):
 		while True:
@@ -44,8 +52,19 @@ class Manager:
 					for i in range(gs.min_clients):
 						c = self.queue[gsid].pop(0)
 						server.add_client(c)
-
 					server.start()
+				else:
+					for client in self.queue[gsid]:
+						p = Payload(action=locals.QUEUE, length=len(self.queue[gsid]), position=self.queue[gsid].index(client))
+						client.send(p)
 			#print(app.process.memory_percent(), app.process.cpu_percent())
+			while len(self.inQueue) > 0:
+				p = self.inQueue.pop(0)
+				if p.action == locals.AUTH:
+					client = self.clients[p.origin]
+					user = models.User.query.filter_by(secret=p.user).first()
+					server = models.GameServer.query.filter_by(user_id=user.id, secret=p.server).first()
+					if server.min_clients > 1:
+						self.add_to_queue(server.id, client)
 
 			gevent.sleep(1)

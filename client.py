@@ -20,11 +20,12 @@ class Client:
 
 	def _send(self, payload):
 		try:
-			# print("Send:", payload.encode())
+			print("SEND:", payload.encode())
 			self.socket.send(payload.encode())
 			self.outQueue.remove(payload)
 		except WebSocketError:
-			print("Socket is dead")
+			self.master.kill(self)
+			self.outQueue.remove(payload)
 
 	def send(self, payload):
 		self.outQueue.append(payload)
@@ -38,9 +39,10 @@ class Client:
 			if data is None:
 				raise WebSocketError
 			data = Payload(data)
+			print("RECV:", data.__dict__)
 			self.master.inQueue.append(data)
 		except WebSocketError:
-			pass
+			self.master.kill(self)
 
 	def _queue(self):
 		while not self.socket.closed:

@@ -8,7 +8,6 @@ class Server:
 	def __init__(self, gs):
 		self.options = {"max_clients":gs.max_clients,
 						"min_clients":gs.min_clients,
-						"persistent":gs.persistent,
 						"hard_min":gs.hard_min}
 		self.clients = {}
 		self._curid = 0
