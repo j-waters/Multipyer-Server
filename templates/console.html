@@ -278,19 +278,13 @@ function refresh_servers() {
 		for (var key in data) {
 			dat = data[key]
 			if (dat['state'] == 'good') {
-				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
-					static ', filename='
-					images / working.png ')}}')
+				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('static', filename='images/working.png')}}')
 			}
 			if (dat['state'] == 'warning') {
-				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
-					static ', filename='
-					images / warning.png ')}}')
+				$('#S' + dat['id']).children('img').attr('src', '{{url_for('static', filename='images/warning.png')}}')
 			}
 			if (dat['state'] == 'error') {
-				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
-					static ', filename='
-					images / error.png ')}}')
+				$('#S' + dat['id']).children('img').attr('src', '{{url_for('static', filename='images/error.png')}}')
 			}
 			$('#S' + dat['id']).children('p').children('#sGears').html(dat['gears'])
 			$('#S' + dat['id']).children('p').children('#sInstances').html(dat['instances'])
