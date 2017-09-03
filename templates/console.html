@@ -235,6 +235,69 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+<script type="text/javascript">
+$("#settingsForm").submit(function(event) {
+
+	/* stop form from submitting normally */
+	event.preventDefault();
+
+	/* get some values from elements on the page: */
+	var $form = $(this)
+
+	/* Send the data using post */
+	var posting = $.post("{{ url_for('server_settings') }}", {
+		id: { %
+			if selected is not none %
+		} {
+			{
+				selected.id
+			}
+		} { %
+			else %
+		}
+		"" { % endif %
+		},
+		min_clients: $form.find('input[name="min_clients"]').val(),
+		max_clients: $form.find('input[name="max_clients"]').val(),
+		min_stop: $form.find('input[name="min_stop"]').val(),
+		max_instances: $form.find('input[name="max_instances"]').val(),
+		name: $form.find('input[name="servername"]').val()
+	});
+
+	/* Put the results in a div */
+	posting.done(function(data) {
+		Materialize.toast('Settings Applied', 3000, 'rounded')
+		refresh_servers()
+	});
+});
+
+function refresh_servers() {
+	$.get("{{ url_for('server_data', target='all') }}", function(data) {
+		data = JSON.parse(data)
+		for (var key in data) {
+			dat = data[key]
+			if (dat['state'] == 'good') {
+				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
+					static ', filename='
+					images / working.png ')}}')
+			}
+			if (dat['state'] == 'warning') {
+				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
+					static ', filename='
+					images / warning.png ')}}')
+			}
+			if (dat['state'] == 'error') {
+				$('#S' + dat['id']).children('img').attr('src', '{{ url_for('
+					static ', filename='
+					images / error.png ')}}')
+			}
+			$('#S' + dat['id']).children('p').children('#sGears').html(dat['gears'])
+			$('#S' + dat['id']).children('p').children('#sInstances').html(dat['instances'])
+		}
+	})
+}
+</script>
 </body>
 
 </html>
