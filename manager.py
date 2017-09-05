@@ -41,7 +41,7 @@ class Manager:
 		for k, v in self.queue.items():
 			if client in v:
 				v.remove(client)
-		self.clients = {key: value for key, value in self.clients.items() if value != client}
+		del self.clients[client.unid]
 
 	def update(self):
 		while True:
@@ -55,7 +55,7 @@ class Manager:
 					server.start()
 				else:
 					for client in self.queue[gsid]:
-						p = Payload(action=locals.QUEUE, length=len(self.queue[gsid]), position=self.queue[gsid].index(client))
+						p = Payload(target=client.unid, action=locals.QUEUE, length=len(self.queue[gsid]), position=self.queue[gsid].index(client))
 						client.send(p)
 			#print(app.process.memory_percent(), app.process.cpu_percent())
 			while len(self.inQueue) > 0:
