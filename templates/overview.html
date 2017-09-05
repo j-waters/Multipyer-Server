@@ -1,0 +1,18 @@
+<div class="col s10">
+	<div class="row">
+		<div class="col s2" style="padding-left:0">
+			<label class="center-align">Server ID</label>
+			<h6 class="tooltipped" id="serverID" onclick="copyToClipboard('#serverID')"
+				data-tooltip="Click to copy to clipboard">{{selected.secret}}</h6>
+		</div>
+		<div class="col s8">
+			<label class="center-align">User ID</label>
+			<h6 class="tooltipped" id="userID" onclick="copyToClipboard('#userID')"
+				data-tooltip="Click to copy to clipboard">{{selected.user.secret}}</h6>
+		</div>
+	</div>
+</div>
+<div class="col s2" style="text-align:center">
+	<h3>Gears:</h3>
+	<h4 id="gears">6/60</h4>
+</div>

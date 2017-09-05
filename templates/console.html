@@ -133,7 +133,7 @@
 
 <nav style="position:relative; z-index:100">
 	<div class="nav-wrapper light-blue lighten-1">
-		<img src="favicons/favicon.png" style="width:60px; height:60px;margin-top: 2px;"><a href="#!"
+		<img src="favicons/favicon.png" style="width:60px; height:60px;margin-top: 2px;"><a href="{{ url_for('home')}}"
 																							class="brand-logo">Multipyer</a>
 		<ul class="right hide-on-med-and-down">
 			<li><a href="sass.html"><i class="material-icons">search</i></a></li>
@@ -222,7 +222,7 @@
 					<li class="tab col s3"><a href="#accounts">Accounts</a></li>
 				</ul>
 			</div>
-			<div id="overview" class="col s12">Test 1</div>
+			<div id="overview" class="col s12">{% include 'overview.html' %}</div>
 			<div id="settings" class="col s12">{% include 'settings.html' %}</div>
 			<div id="instances" class="col s12">Test 4</div>
 			<div id="accounts" class="col s12">Test 4</div>
