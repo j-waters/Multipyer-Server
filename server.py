@@ -29,7 +29,6 @@ class Server:
 
 	def update(self):
 		while True:
-			print(self.inQueue)
 			while len(self.inQueue) > 0:
 				payload = self.inQueue.pop(0) # type: Payload
 				if payload.target == "s":
