@@ -1,3 +1,4 @@
+import random
 from json import dumps, loads
 
 from gevent import monkey
@@ -32,6 +33,7 @@ db = SQLAlchemy(app)
 
 import gevent
 manager = None
+
 from psutil import Process
 import locals
 
@@ -112,7 +114,8 @@ def server_data(target):
 		servers = models.GameServer.query.filter_by(user=flask_login.current_user).all()
 		out = {}
 		for server in servers: # type: models.GameServer
-			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running()}
+			instances = list(reversed([i.encode() for i in models.Instance.query.filter_by(server_id=server.id).all()]))
+			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running(), "inst": instances}
 		return dumps(out)
 	else:
 		server = models.GameServer.query.filter_by(id=int(target)).first()  # type: models.GameServer
@@ -308,6 +311,13 @@ def acc_data_set():
 def before_request():
     flask.g.user = flask_login.current_user
 
+@app.before_first_request
+def first():
+	global manager
+	if manager == None:
+		from manager import Manager
+		manager = Manager()
+
 
 def init():
 	db.reflect()
@@ -317,7 +327,11 @@ def init():
 	u = models.User("bob", "mail", "123")
 	db.session.add(u)
 
+	g = models.GameServer(u, "Test Server", 2, 2, 2, 2)
+	db.session.add(g)
+
 	db.session.commit()
+	g.gen_secret(db)
 	u.gen_secret(db)
 
 	print("Database Setup Complete")

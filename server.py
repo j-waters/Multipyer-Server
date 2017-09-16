@@ -3,16 +3,21 @@ from client import Client
 from payload import Payload
 import models
 import locals
+from flaskapp import db, app
 
 class Server:
-	def __init__(self, gs):
+	def __init__(self, gs, manager):
 		self.options = {"max_clients":gs.max_clients,
 						"min_clients":gs.min_clients,
 						"min_stop":gs.min_stop}
 		self.clients = {}
 		self._curid = 0
 		self.inQueue = []
-		self.instance = models.Instance(gs)
+		instance = models.Instance(gs)
+		self.manager = manager
+		db.session.add(instance)
+		db.session.commit()
+		self.instanceID = instance.id
 		gevent.spawn(self.update)
 	
 	def add_client(self, client):
@@ -21,7 +26,14 @@ class Server:
 
 	def kill(self, client):
 		del self.clients[client.unid]
+		self.check_alive()
 
+	def check_alive(self):
+		with app.app_context():
+			if len(self.clients.keys()) < self.options["min_stop"]:
+				inst = models.Instance.query.filter_by(id=self.instanceID).first()
+				inst.end()
+				#del self.manager.servers[self.instance.id] # This for some reason causes the database to lock
 
 	def process(self, payload):
 		pass

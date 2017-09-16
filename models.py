@@ -124,6 +124,7 @@ class Account(db.Model):
 class Instance(db.Model):
 	__tablename__ = 'instances'
 	id = db.Column(db.Integer, primary_key=True)
+	number = db.Column(db.Integer)
 	log = db.Column(db.Text)
 	start = db.Column(db.DateTime)
 	stop = db.Column(db.DateTime)
@@ -131,10 +132,32 @@ class Instance(db.Model):
 
 	def __init__(self, server):
 		server.instances.append(self)
+		self.number = len(self.server.instances.all())
 		self.start = datetime.utcnow()
 
 	def __repr__(self):
 		return '<Instance of {}>'.format(self.server)
+
+	def end(self):
+		self.stop = datetime.utcnow()
+		db.session.commit()
+
+	def encode(self):
+		from flaskapp import manager
+		if self.id not in manager.servers.keys() and self.stop is None:  # Temp
+			self.end()
+		if self.stop is not None:
+			stop = self.stop.isoformat()
+			c = 0
+			mc = 0
+		else:
+			stop = None
+			svr = manager.servers[self.id]
+			c = len(svr.clients)
+			mc = svr.options["max_clients"]
+
+		return {"log": self.log, "start": self.start.isoformat(), "stop": stop, "id": self.number, "clients": c, "max_clients": mc}
+
 
 def init_db():
 	db.reflect()
