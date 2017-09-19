@@ -20,9 +20,14 @@ class Server:
 		self.instanceID = instance.id
 		gevent.spawn(self.update)
 	
-	def add_client(self, client):
+	def add_client(self, client, new=False):
 		client.master = self
+		if new:
+			for c in self.clients.values():
+				p = Payload(action=locals.CLIENTJOIN, unid=client.unid)
+				c.send(p)
 		self.clients[client.unid] = client
+
 
 	def kill(self, client):
 		del self.clients[client.unid]
@@ -54,6 +59,7 @@ class Server:
 			gevent.sleep(0)
 
 	def start(self):
+		print("start server")
 		for client in self.clients.values():
-			p = Payload(action=locals.START, clients=[c.unid for c in self.clients.values() if c != client], origin="s")
+			p = Payload(action=locals.START, clients=[c.unid for c in self.clients.values() if c != client], instance=self.instanceID, origin="s")
 			client.send(p)

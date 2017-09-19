@@ -30,7 +30,7 @@ class Manager:
 		if not str(gsid) in self.queue.keys():
 			self.queue[str(gsid)] = []
 		self.queue[str(gsid)].append(client)
-		print("Queue:", self.queue)
+		#print("Queue:", self.queue)
 
 	def create_instance(self, gsid):
 		gs = models.GameServer.query.filter_by(id=int(gsid)).first()  # type: models.GameServer
@@ -66,7 +66,15 @@ class Manager:
 						client = self.clients[p.origin]
 						user = models.User.query.filter_by(secret=p.user).first()
 						server = models.GameServer.query.filter_by(user_id=user.id, secret=p.server).first()
-						if server.min_clients > 1:
-							self.add_to_queue(server.id, client)
+						if p.instance == "n":
+							if server.min_clients > 1:
+								self.add_to_queue(server.id, client)
+							else:
+								server = self.create_instance(server.id)
+								c = self.clients[p.origin]
+								server.add_client(c)
+								server.start()
+						else:
+							self.servers[int(p.instance)].add_client(client, True)
 
 				gevent.sleep(1)

@@ -20,7 +20,7 @@ class Client:
 
 	def _send(self, payload):
 		try:
-			#print("SEND:", payload.encode())
+			print("SEND:", payload.encode())
 			self.socket.send(payload.encode())
 			self.outQueue.remove(payload)
 		except WebSocketError:
@@ -39,7 +39,7 @@ class Client:
 			if data is None:
 				raise WebSocketError
 			data = Payload(data)
-			#print("RECV:", data.__dict__)
+			print("RECV:", data.__dict__)
 			self.master.inQueue.append(data)
 		except WebSocketError:
 			self.master.kill(self)
