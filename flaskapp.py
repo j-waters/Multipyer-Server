@@ -7,6 +7,7 @@ monkey.patch_all()
 
 import flask
 from flask_sockets import Sockets
+from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import flask_login
@@ -15,6 +16,7 @@ from sqlalchemy import exc as SQLException
 
 app = flask.Flask(__name__)
 sockets = Sockets(app)
+socketio = SocketIO(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -81,6 +83,20 @@ def websocket(ws):
 
 	while not client.socket.closed:
 		gevent.sleep(10)
+
+@socketio.on('connect', namespace='/serverio')
+def serverio():
+	global manager
+	if manager == None:
+		from manager import Manager
+		manager = Manager()
+	client = manager.add_client(flask.request.sid)
+	print("Connection from", client.unid)
+
+
+@socketio.on('send', namespace='/serverio')
+def receive_io(json):
+	manager.iorecieve(flask.request.sid, json)
 
 
 @app.route('/console')

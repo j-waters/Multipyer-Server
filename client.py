@@ -2,6 +2,7 @@ import gevent
 from geventwebsocket.websocket import WebSocket, WebSocketError
 import locals
 from payload import Payload
+from flaskapp import socketio
 
 
 class Client:
@@ -16,16 +17,24 @@ class Client:
 		p = Payload(action=locals.HANDSHAKE, unid=self.unid)
 		self.send(p)
 		# gevent.spawn(self._queue)
-		gevent.spawn(self._poll)
+		if not type(self.socket) == str:
+			gevent.spawn(self._poll)
 
 	def _send(self, payload):
-		try:
-			print("SEND:", payload.encode())
-			self.socket.send(payload.encode())
-			self.outQueue.remove(payload)
-		except WebSocketError:
-			self.master.kill(self)
-			self.outQueue.remove(payload)
+		if type(self.socket) == str:
+			try:
+				socketio.emit('send', payload.encode(), namespace="/serverio", room=self.socket)
+				self.outQueue.remove(payload)
+			except ValueError:
+				pass
+		else:
+			try:
+				print("SEND:", payload.encode())
+				self.socket.send(payload.encode())
+				self.outQueue.remove(payload)
+			except WebSocketError:
+				self.master.kill(self)
+				self.outQueue.remove(payload)
 
 	def send(self, payload):
 		self.outQueue.append(payload)

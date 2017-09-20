@@ -38,6 +38,12 @@ class Manager:
 		self.servers[server.instanceID] = server
 		return server
 
+	def iorecieve(self, sid, data):
+		for client in self.clients.values():
+			if client.socket == sid:
+				data = Payload(data)
+				client.master.inQueue.append(data)
+
 	def kill(self, client):
 		for k, v in self.queue.items():
 			if client in v:
