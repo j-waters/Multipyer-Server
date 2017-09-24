@@ -231,7 +231,7 @@
 			</div>
 			<div id="overview" class="col s12">{% include 'overview.html' %}</div>
 			<div id="settings" class="col s12">{% include 'settings.html' %}</div>
-			<div id="instances" class="col s12">{% include 'instances.html' %}</div>
+			<div id="instances" class="col s12" style="padding:0">{% include 'instances.html' %}</div>
 			<div id="accounts" class="col s12">Test 4</div>
 		</div>
 
@@ -269,6 +269,8 @@ $("#settingsForm").submit(function(event) {
 	});
 });
 
+setInterval(refresh_servers, 5000)
+
 function refresh_servers() {
 	$.get("{{ url_for('server_data', target='all') }}", function(data) {
 		data = JSON.parse(data)
@@ -285,32 +287,41 @@ function refresh_servers() {
 			}
 			$('#S' + dat['id']).children('p').children('#sGears').html(dat['gears'])
 			$('#S' + dat['id']).children('p').children('#sInstances').html(dat['instances'])
-			console.log(dat['inst'])
-			i = $('#insts')
-			i.empty()
-			t = $('#tbody')
-			t.empty()
-			for (var ins in dat['inst']){
-				instance = dat['inst'][ins]
-				console.log(instance)
-				if (instance['stop'] == null){
-					i.append('<div class="card small green darken-2"> \
-					<div class="card-content white-text activator" style="cursor: pointer;"> \
-						<span class="card-title activator">Instance #' + instance['id'] + '</span> \
-						<p class="activator">' + instance['clients'] + ' clients currently connected out of ' + instance['max_clients'] + '. Running for ' + timeDifference(instance['start']) + '.</p> \
-					</div> \
-					<div class="card-reveal"> \
-						<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span> \
-					  <button class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Stop</button> \
-						<button class="btn waves-effect waves-light col s12" style="background-color:#ff5a92; margin-top: 0.5rem;">Log</button> \
-					</div> \
-					</div>')
+			if (dat['id'] == {{ selected.id }}){
+				i = $('#insts')
+				i.empty()
+				t = $('#tbody')
+				t.empty()
+				var running = false;
+				for (var ins in dat['inst']){
+					instance = dat['inst'][ins]
+					console.log(instance)
+					if (instance['stop'] == null){
+						running = true;
+						i.append('<div class="card small green darken-2"> \
+						<div class="card-content white-text activator" style="cursor: pointer;"> \
+							<span class="card-title activator">Instance #' + instance['id'] + '</span> \
+							<p class="activator">' + instance['clients'] + ' clients currently connected out of ' + instance['max_clients'] + '. Running for ' + timeDifference(instance['start']) + '.</p> \
+						</div> \
+						<div class="card-reveal"> \
+							<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span> \
+						  <button class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Stop</button> \
+							<button class="btn waves-effect waves-light col s12" style="background-color:#ff5a92; margin-top: 0.5rem;">Log</button> \
+						</div> \
+						</div>')
+					}
+					else {
+						t.append('<tr> \
+									<td>#' + instance['id'] + '</td> \
+									<td>Stopped ' + timeDifference(instance['stop']) + ' ago</td> \
+								  </tr>')
+					}
 				}
-				else {
-					t.append('<tr> \
-								<td>#' + instance['id'] + '</td> \
-								<td>Stopped ' + timeDifference(instance['stop']) + ' ago</td> \
-							  </tr>')
+
+				if (running == false){
+					i = $('#instsrow')
+					i.empty()
+					i.append('<p style="text-align: center;font-size: 25px;margin-bottom: 0;color: #8888;">No Running Instances<p>')
 				}
 			}
 		}
