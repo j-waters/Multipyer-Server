@@ -21,8 +21,8 @@ $("#addButton").hover(function() {
 
 $(document).ready(function() {
 	Materialize.updateTextFields();
-	$('.modal').modal({
-		endingTop: '50%'
+	$('#addServer').modal({
+		endingTop: '50%',
 	});
 });
 

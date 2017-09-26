@@ -232,7 +232,7 @@
 			<div id="overview" class="col s12">{% include 'overview.html' %}</div>
 			<div id="settings" class="col s12">{% include 'settings.html' %}</div>
 			<div id="instances" class="col s12" style="padding:0">{% include 'instances.html' %}</div>
-			<div id="accounts" class="col s12">Test 4</div>
+			<div id="accounts" class="col s12">{% include 'accounts.html' %}</div>
 		</div>
 
 	</div>
@@ -269,8 +269,6 @@ $("#settingsForm").submit(function(event) {
 	});
 });
 
-setInterval(refresh_servers, 5000)
-
 function refresh_servers() {
 	$.get("{{ url_for('server_data', target='all') }}", function(data) {
 		data = JSON.parse(data)
@@ -292,6 +290,8 @@ function refresh_servers() {
 				i.empty()
 				t = $('#tbody')
 				t.empty()
+				a = $('#accs')
+				a.empty()
 				var running = false;
 				for (var ins in dat['inst']){
 					instance = dat['inst'][ins]
@@ -318,6 +318,31 @@ function refresh_servers() {
 					}
 				}
 
+				for (var accs in dat['acc']){
+					account = dat['acc'][accs]
+					a.append('<div class="card small pink darken-1"> \
+						<div class="card-content white-text activator" style="cursor: pointer;"> \
+							<span class="card-title activator">' + account['username'] + '</span> \
+							<p class="activator">Created ' + timeDifference(account['created']) + ' ago.</p> \
+						</div> \
+						<div class="card-reveal"> \
+							<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span> \
+							<button class="btn waves-effect waves-light col s12" style="background-color:#ff5a92">Delete</button> \
+							<button data-target="AC' + account['username'] + '" class="btn modal-trigger waves-effect waves-light col s12" style="background-color:#ff5a92; margin-top: 0.5rem;">Data</button> \
+						</div> \
+					</div>')
+
+					a.append('<div id="AC' + account['username'] + '" class="modal"> \
+						<div class="modal-content"> \
+						  <h4>' + account['username'] + '</h4> \
+						  <p>' + account['data'].replace(new RegExp('"', 'g'), "'")  + '</p> \
+						</div> \
+						<div class="modal-footer"> \
+						  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a> \
+						</div> \
+					  </div>')
+				}
+
 				if (running == false){
 					i = $('#instsrow')
 					i.empty()
@@ -325,8 +350,12 @@ function refresh_servers() {
 				}
 			}
 		}
+		$('.modal').modal({endingTop: '20%'});
 	})
+
 }
+
+refresh_servers()
 </script>
 </body>
 

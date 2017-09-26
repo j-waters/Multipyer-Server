@@ -131,7 +131,8 @@ def server_data(target):
 		out = {}
 		for server in servers: # type: models.GameServer
 			instances = [i.encode() for i in models.Instance.query.filter_by(server_id=server.id).order_by(models.Instance.id.desc()).all()]
-			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running(), "inst": instances}
+			accounts = [i.encode() for i in models.Account.query.filter_by(user_id=flask_login.current_user.id).order_by(models.Account.id.desc()).all()]
+			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running(), "inst": instances, "acc": accounts}
 		return dumps(out)
 	else:
 		server = models.GameServer.query.filter_by(id=int(target)).first()  # type: models.GameServer

@@ -106,6 +106,7 @@ class Account(db.Model):
 	email = db.Column(db.String(120))
 	password = db.Column(db.String(66))
 	data = db.Column(db.Text)
+	created = db.Column(db.DateTime)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 	def __init__(self, user, username, password, email="", **kwargs):
@@ -113,6 +114,7 @@ class Account(db.Model):
 		self.username = username
 		self.password = generate_password_hash(password)
 		self.email = email
+		self.created = datetime.utcnow()
 		self.data = dumps(kwargs)
 
 	def __repr__(self):
@@ -120,6 +122,9 @@ class Account(db.Model):
 
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
+
+	def encode(self):
+		return {"username": self.username, "data": self.data, "created": self.created.isoformat()}
 
 class Instance(db.Model):
 	__tablename__ = 'instances'
