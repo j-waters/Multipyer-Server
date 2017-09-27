@@ -59,7 +59,6 @@ class Server:
 			gevent.sleep(0)
 
 	def start(self):
-		print("start server")
 		for client in self.clients.values():
 			p = Payload(action=locals.START, clients=[c.unid for c in self.clients.values() if c != client], instance=self.instanceID, origin="s")
 			client.send(p)

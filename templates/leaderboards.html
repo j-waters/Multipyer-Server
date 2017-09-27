@@ -1,0 +1,34 @@
+<div style="height: 82vh;overflow: auto;">
+	<p style="text-align: center;margin-top: 0;margin-bottom: 0;color: #8888;">Remember - leaderboards are shared
+		between all of your servers</p>
+	<div class="row" id="lbsrow">
+		<div>
+			<ul id="lbs" class="collapsible" data-collapsible="accordion">
+
+
+			</ul>
+
+			<a href="#addLeaderboard" id="addLBButton" class="waves-effect waves-light col s12 modal-trigger btn"
+			   style="height:52px;background-color:#ff5a92"><i id="addLBIcon" class="material-icons"
+															   style="color: #fff;font-size: 50px;line-height: 1;">add_circle</i></a>
+		</div>
+	</div>
+</div>
+
+<div id="addLeaderboard" class="modal">
+	<form class="login-form" action="{{ url_for('create_leaderboard') }}" method="post">
+		<div class="modal-content">
+			<h4>Create Leaderboard</h4>
+
+			<div class="input-field">
+				<input name="lbname" id="gsname" type="text" style="margin: auto;">
+				<label for="lbname" class="center-align">Leaderboard Name</label>
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+			<button type="submit" class="modal-action modal-close waves-effect waves-blue btn-flat">Create</button>
+		</div>
+	</form>
+</div>

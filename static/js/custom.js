@@ -19,6 +19,14 @@ $("#addButton").hover(function() {
 	}
 )
 
+$("#addLBButton").hover(function() {
+		$("#addLBIcon").html("add_circle_outline")
+	},
+	function() {
+		$("#addLBIcon").html("add_circle")
+	}
+)
+
 $(document).ready(function() {
 	Materialize.updateTextFields();
 	$('#addServer').modal({

@@ -132,11 +132,34 @@ def server_data(target):
 		for server in servers: # type: models.GameServer
 			instances = [i.encode() for i in models.Instance.query.filter_by(server_id=server.id).order_by(models.Instance.id.desc()).all()]
 			accounts = [i.encode() for i in models.Account.query.filter_by(user_id=flask_login.current_user.id).order_by(models.Account.id.desc()).all()]
-			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running(), "inst": instances, "acc": accounts}
+			leaderboards = [i.encode() for i in models.LeaderBoard.query.filter_by(user_id=flask_login.current_user.id).order_by(models.LeaderBoard.id.desc()).all()]
+			out[server.id] = {"state": server.get_state(), "id": server.id, "gears": server.get_gears(), "instances": server.get_running(), "inst": instances, "acc": accounts, "lb":leaderboards}
 		return dumps(out)
 	else:
 		server = models.GameServer.query.filter_by(id=int(target)).first()  # type: models.GameServer
 		return dumps({"state": server.get_state(), "id": server.id, "gears": server.get_gears()})
+
+@app.route('/get_leaderboard/<secret>')
+def get_leaderboard(secret):
+	leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first().encode()
+	print(dumps(leaderboard))
+	return dumps(leaderboard)
+
+@app.route('/set_leaderboard/<secret>', methods=['GET', 'POST'])
+def set_leaderboard(secret):
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('console'))
+	data = loads(flask.request.json)
+	key = data['key']
+	value = data['value']
+	leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first()
+	for i in leaderboard.items.all():
+		if i.key == key:
+			i.value = value
+			return dumps(leaderboard.encode())
+	print(key, value)
+	leaderboard.add(key, value)
+	return dumps(leaderboard.encode())
 
 
 @app.route('/create_server', methods=['GET', 'POST'])
@@ -151,6 +174,19 @@ def create_server():
 	db.session.commit()
 	gs.gen_secret(db)
 	return flask.redirect(flask.url_for('console', server=gs.id) + "#settings")
+
+@app.route('/create_leaderboard', methods=['GET', 'POST'])
+@flask_login.login_required
+def create_leaderboard():
+	if flask.request.method == 'GET':
+		return flask.redirect(flask.url_for('console'))
+
+	name = flask.request.form['lbname']
+	lb = models.LeaderBoard(flask_login.current_user, name)
+	db.session.add(lb)
+	db.session.commit()
+	lb.gen_secret(db)
+	return flask.redirect(flask.url_for('console', server=lb.id) + "#leaderboard")
 
 @app.route('/')
 def home():
@@ -172,12 +208,12 @@ def login():
 
 @app.route('/logout')
 def logout():
-    flask_login.logout_user()
-    return flask.redirect(flask.url_for('home'))
+	flask_login.logout_user()
+	return flask.redirect(flask.url_for('home'))
 
 @app.route('/reset_password')
 def password_reset():
-    return "Password Reset"
+	return "Password Reset"
 
 @login_manager.user_loader
 def load_user(id):
@@ -197,7 +233,7 @@ def register():
 			return message(message="<p>Make sure you enter a password</p>", url=flask.url_for('register'))
 		try:
 			u = models.User(flask.request.form['username'], flask.request.form['email'], flask.request.form['password'],
-			                level=1)
+							level=1)
 			db.session.add(u)
 			db.session.commit()
 			u.gen_secret(db)
@@ -214,8 +250,8 @@ def message(message="<p>Oops - an error has occurred</p>", url="/", button="Back
 @app.route('/registered')
 def registered():
 	return flask.render_template('message.html',
-	                             message="<h4>Registration successful! </h4> <p> Make sure to check your inbox so that you can confirm your email address</p>",
-	                             url=flask.url_for('console'), button="Continue")
+								 message="<h4>Registration successful! </h4> <p> Make sure to check your inbox so that you can confirm your email address</p>",
+								 url=flask.url_for('console'), button="Continue")
 
 
 @app.route('/chk_usrname', methods=['POST'])
@@ -326,7 +362,7 @@ def acc_data_set():
 
 @app.before_request
 def before_request():
-    flask.g.user = flask_login.current_user
+	flask.g.user = flask_login.current_user
 
 @app.before_first_request
 def first():
@@ -347,9 +383,16 @@ def init():
 	g = models.GameServer(u, "Test Server", 2, 2, 2, 2)
 	db.session.add(g)
 
+	l = models.LeaderBoard(u, 'score')
+	db.session.add(l)
+
+	l.add('slayer1', 34)
+
 	db.session.commit()
 	g.gen_secret(db)
 	u.gen_secret(db)
+	l.gen_secret(db)
+
 
 	print("Database Setup Complete")
 

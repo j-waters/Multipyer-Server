@@ -65,8 +65,13 @@
 			<h5 class="header col s12 light">An online networking solution for Python beginners</h5>
 		</div>
 		<div class="row center">
+			{% if g.user.is_authenticated == False%}
 			<a href="{{ url_for('register') }}" id="register-button"
 			   class="btn-large waves-effect waves-light orange">Begin</a>
+			{% else %}
+			<a href="{{ url_for('console') }}" id="console-button"
+			   class="btn-large waves-effect waves-light orange">Console</a>
+			{% endif %}
 		</div>
 		<br><br>
 

@@ -18,6 +18,7 @@ class User(db.Model):
 	password = db.Column(db.String(100))
 	servers = db.relationship('GameServer', backref='user', lazy='dynamic')
 	accounts = db.relationship('Account', backref='user', lazy='dynamic')
+	leaderboards = db.relationship('LeaderBoard', backref='user', lazy='dynamic')
 
 	def __init__(self, username, email, password, level=1):
 		self.username = username
@@ -162,6 +163,52 @@ class Instance(db.Model):
 			mc = svr.options["max_clients"]
 
 		return {"log": self.log, "start": self.start.isoformat(), "stop": stop, "id": self.number, "clients": c, "max_clients": mc}
+
+class LeaderBoard(db.Model):
+	__tablename__ = 'leaderboards'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(40))
+	secret = db.Column(db.String(8))
+	created = db.Column(db.DateTime)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	items = db.relationship('LeaderBoardItem', backref='leaderboard', lazy='dynamic')
+
+	def __init__(self, user, name):
+		self.name = name
+		self.created = datetime.utcnow()
+		user.leaderboards.append(self)
+
+	def __repr__(self):
+		return '<Leaderboard {}>'.format(self.name)
+
+	def gen_secret(self, db):
+		self.secret = "LB" + str(self.id).zfill(2) + hexlify(urandom(2)).decode()
+		db.session.commit()
+
+	def encode(self):
+		items = [[i.key, i.value] for i in self.items.all()]
+		return {'name': self.name, 'secret': self.secret, 'items': items}
+
+	def add(self, key, value):
+		LeaderBoardItem(self, key, str(value))
+		db.session.commit()
+
+class LeaderBoardItem(db.Model):
+	__tablename__ = "leaderboard_items"
+	id = db.Column(db.Integer, primary_key=True)
+	key = db.Column(db.String(40))
+	value = db.Column(db.String(40))
+	added = db.Column(db.DateTime)
+	leaderboard_id = db.Column(db.Integer, db.ForeignKey('leaderboards.id'))
+
+	def __init__(self, leaderboard, key, value):
+		self.key = key
+		self.value = value
+		self.added = datetime.utcnow()
+		leaderboard.items.append(self)
+
+	def __repr__(self):
+		return '<{}: {} of Leaderboard {}>'.format(self.key, self.value, self.leaderboard.name)
 
 
 def init_db():

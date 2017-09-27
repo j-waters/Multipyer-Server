@@ -1076,7 +1076,6 @@ var pJS = function(tag_id, params){
       pJS.interactivity.el.addEventListener('mousemove', function(e){
 
         if(pJS.interactivity.el == window){
-        console.log(e)
           var pos_x = e.pageX,
               pos_y = e.pageY - 64;
         }

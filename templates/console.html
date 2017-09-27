@@ -53,6 +53,11 @@
 			transform: translateY(-50%) !important;
 		}
 
+		#addLeaderboard {
+			top: 50%;
+			transform: translateY(-50%) !important;
+		}
+
 		.range-field label {
 			font-size: 0.8rem;
 			transform: translateY(-14px);
@@ -223,16 +228,18 @@
 		<div class="row">
 			<div class="col s12" style="padding-left: 0px;padding-right: 0px;">
 				<ul class="tabs">
-					<li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
+					<li class="tab col s2"><a class="active" href="#overview">Overview</a></li>
 					<li class="tab col s3"><a href="#settings">Settings</a></li>
 					<li class="tab col s3"><a href="#instances">Instances</a></li>
-					<li class="tab col s3"><a href="#accounts">Accounts</a></li>
+					<li class="tab col s2"><a href="#accounts">Accounts</a></li>
+					<li class="tab col s2"><a href="#leaderboards">Leaderboards</a></li>
 				</ul>
 			</div>
 			<div id="overview" class="col s12">{% include 'overview.html' %}</div>
 			<div id="settings" class="col s12">{% include 'settings.html' %}</div>
 			<div id="instances" class="col s12" style="padding:0">{% include 'instances.html' %}</div>
 			<div id="accounts" class="col s12">{% include 'accounts.html' %}</div>
+			<div id="leaderboards" class="col s12">{% include 'leaderboards.html' %}</div>
 		</div>
 
 	</div>
@@ -292,6 +299,8 @@ function refresh_servers() {
 				t.empty()
 				a = $('#accs')
 				a.empty()
+				l = $('#lbs')
+				l.empty()
 				var running = false;
 				for (var ins in dat['inst']){
 					instance = dat['inst'][ins]
@@ -341,6 +350,40 @@ function refresh_servers() {
 						  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a> \
 						</div> \
 					  </div>')
+				}
+
+				for (var lbs in dat['lb']){
+					leaderboard = dat['lb'][lbs]
+					t = '<li> \
+						<div class="collapsible-header">' + leaderboard['name'] + '</div> \
+						<div class="collapsible-body"> \
+						<label class="center-align">Secret</label> \
+						<h6>' + leaderboard['secret'] + '</h6> \
+							<table id=""> \
+								<thead> \
+								<tr> \
+									<th>Key</th> \
+									<th>Value</th> \
+								</tr> \
+								</thead> \
+								<tbody>'
+					for (var it in leaderboard['items']){
+						t += '<tr> \
+							<td>' + leaderboard['items'][it][0] + '</td> \
+							<td>' + leaderboard['items'][it][1] + '</td> \
+						  </tr>'
+					}
+					t += '</tbody> \
+						</table> \
+						</div> \
+					</li>'
+					l.append(t)
+				}
+
+				if (dat['acc'].length == 0) {
+					a = $('#accs')
+					a.empty()
+					a.append('<p style="text-align: center;font-size: 25px;margin-bottom: 0;color: #8888;">No Accounts Created<p>')
 				}
 
 				if (running == false){
