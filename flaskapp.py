@@ -91,7 +91,7 @@ def serverio():
 		from manager import Manager
 		manager = Manager()
 	client = manager.add_client(flask.request.sid)
-	print("Connection from", client.unid)
+	print("Connection from socketio", client.unid)
 
 
 @socketio.on('send', namespace='/serverio')
@@ -139,27 +139,31 @@ def server_data(target):
 		server = models.GameServer.query.filter_by(id=int(target)).first()  # type: models.GameServer
 		return dumps({"state": server.get_state(), "id": server.id, "gears": server.get_gears()})
 
-@app.route('/get_leaderboard/<secret>')
-def get_leaderboard(secret):
-	leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first().encode()
-	print(dumps(leaderboard))
-	return dumps(leaderboard)
+@app.route('/get_leaderboard/<usecret>/<secret>')
+def get_leaderboard(usecret, secret):
+	if models.User.query.filter_by(secret=usecret).first() != None:
+		leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first().encode()
+		return dumps(leaderboard)
+	else:
+		return dumps(locals.INVALID_SECRET)
 
-@app.route('/set_leaderboard/<secret>', methods=['GET', 'POST'])
-def set_leaderboard(secret):
+@app.route('/set_leaderboard/<usecret>/<secret>', methods=['GET', 'POST'])
+def set_leaderboard(usecret, secret):
 	if flask.request.method == 'GET':
 		return flask.redirect(flask.url_for('console'))
-	data = loads(flask.request.json)
-	key = data['key']
-	value = data['value']
-	leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first()
-	for i in leaderboard.items.all():
-		if i.key == key:
-			i.value = value
-			return dumps(leaderboard.encode())
-	print(key, value)
-	leaderboard.add(key, value)
-	return dumps(leaderboard.encode())
+	if models.User.query.filter_by(secret=usecret).first() != None:
+		data = loads(flask.request.json)
+		key = data['key']
+		value = data['value']
+		leaderboard = models.LeaderBoard.query.filter_by(secret=secret).first()
+		for i in leaderboard.items.all():
+			if i.key == key:
+				i.value = value
+				return dumps(leaderboard.encode())
+		leaderboard.add(key, value)
+		return dumps(leaderboard.encode())
+	else:
+		return dumps(locals.INVALID_SECRET)
 
 
 @app.route('/create_server', methods=['GET', 'POST'])
