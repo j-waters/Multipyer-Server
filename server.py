@@ -24,7 +24,7 @@ class Server:
 		client.master = self
 		if new:
 			for c in self.clients.values():
-				p = Payload(action=locals.CLIENTJOIN, unid=client.unid)
+				p = Payload(action=locals.CLIENTJOIN, client=client.encode())
 				c.send(p)
 		self.clients[client.unid] = client
 
@@ -55,10 +55,14 @@ class Server:
 						if k != payload.origin:
 							v.send(payload)
 				else:
-					self.clients[payload.target].send(payload)
+					if type(payload.target) == str:
+						self.clients[payload.target].send(payload)
+					else:
+						for t in payload.target:
+							self.clients[t].send(payload)
 			gevent.sleep(0)
 
 	def start(self):
 		for client in self.clients.values():
-			p = Payload(action=locals.START, clients=[c.unid for c in self.clients.values() if c != client], instance=self.instanceID, origin="s")
+			p = Payload(action=locals.START, clients=[c.encode() for c in self.clients.values() if c != client], instance=self.instanceID, origin="s")
 			client.send(p)

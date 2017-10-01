@@ -70,8 +70,14 @@ class Manager:
 					p = self.inQueue.pop(0)
 					if p.action == locals.AUTH:
 						client = self.clients[p.origin]
-						user = models.User.query.filter_by(secret=p.user).first()
-						server = models.GameServer.query.filter_by(user_id=user.id, secret=p.server).first()
+						client.data = p.data
+						try:
+							user = models.User.query.filter_by(secret=p.user).first()
+							server = models.GameServer.query.filter_by(user_id=user.id, secret=p.server).first()
+						except AttributeError:
+							client.send(Payload(target=client.unid, action=locals.INVALID_SECRET))
+							continue
+
 						if p.instance == "n":
 							if server.min_clients > 1:
 								self.add_to_queue(server.id, client)

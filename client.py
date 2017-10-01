@@ -10,6 +10,7 @@ class Client:
 		self.master = master
 		self.socket = socket  # type: WebSocket
 		self.unid = unid
+		self.data = {}
 		self.outQueue = []
 		self.handshake()
 
@@ -29,7 +30,7 @@ class Client:
 				pass
 		else:
 			try:
-				print("SEND:", payload.encode())
+				#print("SEND:", payload.encode())
 				self.socket.send(payload.encode())
 				self.outQueue.remove(payload)
 			except WebSocketError:
@@ -48,7 +49,7 @@ class Client:
 			if data is None:
 				raise WebSocketError
 			data = Payload(data)
-			print("RECV:", data.__dict__)
+			#print("RECV:", data.__dict__)
 			self.master.inQueue.append(data)
 		except WebSocketError:
 			self.master.kill(self)
@@ -64,3 +65,8 @@ class Client:
 			self._receive()
 			gevent.sleep(0)
 		# self.close()
+
+	def encode(self):
+		out = {"unid": self.unid}
+		out.update(self.data)
+		return out

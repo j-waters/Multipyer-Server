@@ -159,6 +159,7 @@ def set_leaderboard(usecret, secret):
 		for i in leaderboard.items.all():
 			if i.key == key:
 				i.value = value
+				db.session.commit()
 				return dumps(leaderboard.encode())
 		leaderboard.add(key, value)
 		return dumps(leaderboard.encode())
